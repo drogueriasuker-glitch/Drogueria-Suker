@@ -1,0 +1,17 @@
+# robots.txt — Droguería Suker
+# Permitir el rastreo completo del sitio a todos los buscadores
+
+User-agent: *
+Allow: /
+
+# Bots de IA / rastreadores que respetan robots (permitidos)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: https://drogueriasuker.com/sitemap.xml

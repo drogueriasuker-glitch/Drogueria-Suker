@@ -1,0 +1,27 @@
+{
+  "name": "Droguería Suker — Distribuidora Farmacéutica",
+  "short_name": "Droguería Suker",
+  "description": "Droguería y distribuidora farmacéutica en Juliaca con delivery a nivel nacional en todo el Perú.",
+  "lang": "es-PE",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B1322",
+  "theme_color": "#0B1322",
+  "categories": ["medical", "shopping", "health"],
+  "icons": [
+    {
+      "src": "assets/img/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/img/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

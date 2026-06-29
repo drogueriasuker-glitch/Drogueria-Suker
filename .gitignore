@@ -1,0 +1,14 @@
+# Configuración local de herramientas (no es parte del sitio)
+.claude/
+.vscode/
+
+# Sistema operativo
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# Temporales
+*.tmp
+*~
+*.log
