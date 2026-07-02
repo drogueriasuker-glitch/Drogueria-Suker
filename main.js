@@ -646,9 +646,8 @@
   function initHeroVideo() {
     var video = document.getElementById("heroVideoEl");
     if (!video) return;
-    var panel = document.getElementById("hero3d");
+    var panel = document.getElementById("heroVideoBg");
     var btn = document.getElementById("heroVideoSound");
-    var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     var pausedByUser = false;
     var soundOn = false;
 
@@ -658,15 +657,24 @@
       video.addEventListener("play",  function () { panel.classList.remove("is-paused"); });
     }
 
-    // prefers-reduced-motion: no reproducir solo, deja la portada
-    if (reduced) {
-      video.removeAttribute("autoplay");
-      video.pause();
-    } else {
-      // Algunos navegadores necesitan el play() explícito tras cargar
-      var p = video.play();
-      if (p && typeof p.catch === "function") { p.catch(function () {}); }
+    // Reproducir SIEMPRE de forma automática (mudo → permitido por el navegador),
+    // incluso con "reducir movimiento" activo: es un pedido explícito.
+    video.muted = true;
+    function tryPlay() {
+      var pr = video.play();
+      if (pr && typeof pr.catch === "function") { pr.catch(function () {}); }
     }
+    tryPlay();
+    // Plan B: si el navegador bloqueara el autoplay, arranca en la 1ª interacción
+    function kickstart() {
+      if (video.paused && !pausedByUser) tryPlay();
+      ["pointerdown", "keydown", "scroll", "touchstart"].forEach(function (ev) {
+        window.removeEventListener(ev, kickstart);
+      });
+    }
+    ["pointerdown", "keydown", "scroll", "touchstart"].forEach(function (ev) {
+      window.addEventListener(ev, kickstart, { passive: true });
+    });
 
     // Botón de sonido
     if (btn) {
@@ -692,10 +700,9 @@
         var doc = document;
         var inFs = doc.fullscreenElement || doc.webkitFullscreenElement;
         if (!inFs) {
-          var target = panel || video;
-          var req = target.requestFullscreen || target.webkitRequestFullscreen || target.msRequestFullscreen;
-          if (req) { try { req.call(target); return; } catch (e) {} }
-          // iOS: solo el <video> admite pantalla completa (reproductor nativo)
+          var req = video.requestFullscreen || video.webkitRequestFullscreen || video.msRequestFullscreen;
+          if (req) { try { req.call(video); return; } catch (e) {} }
+          // iOS: reproductor nativo a pantalla completa
           if (video.webkitEnterFullscreen) { try { video.webkitEnterFullscreen(); } catch (e) {} }
         } else {
           var exit = doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
@@ -723,7 +730,7 @@
       video.style.transform = "translateZ(0)";
       requestAnimationFrame(function () {
         video.style.transform = "";
-        if (!pausedByUser && !reduced) {
+        if (!pausedByUser) {
           var pr = video.play();
           if (pr && typeof pr.catch === "function") { pr.catch(function () {}); }
         }
@@ -738,7 +745,7 @@
         var visible = ents[0].isIntersecting;
         if (!visible) {
           video.pause();
-        } else if (!pausedByUser && !reduced) {
+        } else if (!pausedByUser) {
           var pr = video.play();
           if (pr && typeof pr.catch === "function") { pr.catch(function () {}); }
         }

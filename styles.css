@@ -788,15 +788,31 @@ p  { line-height: 1.7; }
 .hero .container {
   position: relative;
   z-index: 5;
-  max-width: 2000px;
-  display: grid;
-  grid-template-columns: .66fr 1.34fr;
-  gap: 1.6rem;
-  align-items: center;
-  padding-inline: clamp(1rem, 2vw, 1.6rem);
   padding-block: 4rem 3rem;
+  pointer-events: none;        /* los clics pasan al video de fondo */
 }
-.hero-content { max-width: 620px; }
+.hero-content { max-width: 600px; pointer-events: auto; }
+
+/* ── Video de fondo a pantalla completa (estilo McKesson) ── */
+.hero-video-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+/* Capa oscura para que el texto se lea sobre el video */
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg,
+      rgba(8,13,26,.94) 0%, rgba(8,13,26,.82) 26%,
+      rgba(8,13,26,.5) 52%, rgba(8,13,26,.22) 78%, rgba(8,13,26,.34) 100%),
+    linear-gradient(0deg,
+      rgba(8,13,26,.72) 0%, rgba(8,13,26,.08) 24%, transparent 48%);
+}
 
 /* ── Video de presentación del hero ── */
 .hero-3d {
@@ -839,12 +855,11 @@ p  { line-height: 1.7; }
 .hero-video-el {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 1;
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;        /* 16:9 en panel 16:9 → llena sin bandas */
-  border-radius: inherit;
+  object-fit: cover;        /* llena toda la pantalla */
   cursor: pointer;          /* clic para pausar/reproducir */
 }
 
@@ -874,7 +889,7 @@ p  { line-height: 1.7; }
   box-shadow: 0 12px 34px rgba(8,14,30,.5), inset 0 1px 0 rgba(255,255,255,.4);
 }
 .hero-video-state svg { position: relative; z-index: 1; }
-.hero-3d.is-paused .hero-video-state {
+.hero-video-bg.is-paused .hero-video-state {
   opacity: 1;
   animation: hvStateIn .35s cubic-bezier(.22,1,.36,1);
 }
@@ -902,14 +917,16 @@ p  { line-height: 1.7; }
   to   { opacity: 1; }
 }
 
-/* ── Controles del video (sonido + pantalla completa) ── */
+/* ── Control de sonido del video (esquina superior izq., cerca del logo) ── */
 .hero-video-controls {
   position: absolute;
-  z-index: 4;
-  right: 1rem; bottom: 1rem;
+  z-index: 6;
+  top: calc(var(--nav-h) + .8rem);
+  left: clamp(1.25rem, 5vw, 3rem);
   display: inline-flex;
   align-items: center;
   gap: .6rem;
+  pointer-events: auto;
 }
 .hero-video-btn {
   position: relative;
@@ -961,29 +978,13 @@ p  { line-height: 1.7; }
   70%  { transform: scale(1.25); opacity: 0; }
   100% { transform: scale(1.25); opacity: 0; }
 }
-/* ── Pantalla completa: el contenedor llena la pantalla ── */
-.hero-3d:fullscreen,
-.hero-3d:-webkit-full-screen {
-  aspect-ratio: auto;
-  width: 100%; height: 100%;
-  border: none;
-  border-radius: 0;
+/* ── Pantalla completa: el video se ve completo, sin recortes ── */
+.hero-video-el:fullscreen,
+.hero-video-el:-webkit-full-screen {
+  object-fit: contain;
   background: #0B1322;
-  transform: none !important;  /* anula el tilt del parallax en fullscreen */
+  cursor: default;
 }
-.hero-3d:fullscreen .hero-video-el,
-.hero-3d:-webkit-full-screen .hero-video-el {
-  object-fit: contain;     /* video completo, sin recortes */
-  border-radius: 0;
-}
-.hero-3d:fullscreen .hero-3d-corner,
-.hero-3d:-webkit-full-screen .hero-3d-corner { display: none; }
-.hero-3d:fullscreen .hero-video-controls,
-.hero-3d:-webkit-full-screen .hero-video-controls { right: 1.4rem; bottom: 1.4rem; }
-.hero-3d:fullscreen .hero-video-state svg,
-.hero-3d:-webkit-full-screen .hero-video-state svg { width: 56px; height: 56px; }
-.hero-3d:fullscreen .hero-video-state::before,
-.hero-3d:-webkit-full-screen .hero-video-state::before { width: 110px; height: 110px; }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-3d-corner { animation: none; opacity: 1; }
@@ -1741,10 +1742,8 @@ p  { line-height: 1.7; }
   .nosotros-grid { grid-template-columns: 1fr; }
   .nosotros-visual { max-width: 340px; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
-  /* Hero: apila texto sobre el video */
-  .hero .container { grid-template-columns: 1fr; gap: 2rem; }
-  .hero-content { max-width: 730px; }
-  .hero-3d { width: 100%; max-width: 640px; margin-inline: auto; }
+  /* Hero: video de fondo con el texto encima */
+  .hero-content { max-width: 640px; }
 }
 
 @media (max-width: 767px) {
@@ -1764,15 +1763,15 @@ p  { line-height: 1.7; }
   .scroll-top-btn { bottom: 5.5rem; right: 1.25rem; }
   .hero-actions { flex-direction: column; align-items: flex-start; }
   .hero-strip { gap: 1rem; }
-  .hero-3d { border-radius: 22px; }
-  .hero-video-controls { right: .8rem; bottom: .8rem; gap: .5rem; }
+  .hero-video-controls { top: calc(var(--nav-h) + .6rem); left: 1.25rem; gap: .5rem; }
   .hero-video-btn { width: 44px; height: 44px; }
   .hero-video-btn svg { width: 20px; height: 20px; }
-  .hero-3d-corner { width: 16px; height: 16px; }
-  .hc-tl, .hc-tr { top: 10px; }
-  .hc-bl, .hc-br { bottom: 10px; }
-  .hc-tl, .hc-bl { left: 10px; }
-  .hc-tr, .hc-br { right: 10px; }
+  /* En móvil el texto ocupa casi todo el ancho: scrim más parejo y oscuro */
+  .hero-scrim {
+    background:
+      linear-gradient(0deg,
+        rgba(8,13,26,.9) 0%, rgba(8,13,26,.55) 42%, rgba(8,13,26,.5) 100%);
+  }
 }
 
 @media (max-width: 479px) {
