@@ -646,10 +646,19 @@
   function initHeroVideo() {
     var video = document.getElementById("heroVideoEl");
     if (!video) return;
-    var panel = document.getElementById("heroVideoBg");
+    var panel = document.getElementById("hero3d");
     var btn = document.getElementById("heroVideoSound");
     var pausedByUser = false;
     var soundOn = false;
+
+    // Celular / táctil: sin video — solo se muestra la portada (póster)
+    var posterOnly = matchMedia("(hover: none) and (pointer: coarse)").matches;
+    if (posterOnly) {
+      if (panel) panel.classList.add("poster-only");
+      video.preload = "none";
+      video.pause();
+      return;
+    }
 
     // El indicador de pausa sigue el estado REAL del video
     if (panel) {
@@ -660,6 +669,7 @@
     // Reproducir SIEMPRE de forma automática (mudo → permitido por el navegador),
     // incluso con "reducir movimiento" activo: es un pedido explícito.
     video.muted = true;
+    video.preload = "auto";
     function tryPlay() {
       var pr = video.play();
       if (pr && typeof pr.catch === "function") { pr.catch(function () {}); }
@@ -700,9 +710,10 @@
         var doc = document;
         var inFs = doc.fullscreenElement || doc.webkitFullscreenElement;
         if (!inFs) {
-          var req = video.requestFullscreen || video.webkitRequestFullscreen || video.msRequestFullscreen;
-          if (req) { try { req.call(video); return; } catch (e) {} }
-          // iOS: reproductor nativo a pantalla completa
+          var target = panel || video;
+          var req = target.requestFullscreen || target.webkitRequestFullscreen || target.msRequestFullscreen;
+          if (req) { try { req.call(target); return; } catch (e) {} }
+          // iOS: solo el <video> admite pantalla completa (reproductor nativo)
           if (video.webkitEnterFullscreen) { try { video.webkitEnterFullscreen(); } catch (e) {} }
         } else {
           var exit = doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
