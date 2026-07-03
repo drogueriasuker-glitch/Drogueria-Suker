@@ -13,6 +13,8 @@
 
   function boot() {
     var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Móvil/táctil: versión ligera (menos estrellas, 1x, ~30fps)
+    var mobile = matchMedia("(hover: none) and (pointer: coarse)").matches;
 
     var canvas = document.createElement("canvas");
     canvas.className = "starfield-bg";
@@ -27,7 +29,7 @@
 
     /* ── Tamaño + densidad responsiva ── */
     function resize() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = mobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
       w = window.innerWidth;
       h = window.innerHeight;
       canvas.width  = Math.round(w * dpr);
@@ -39,8 +41,8 @@
     }
 
     function buildFloaters() {
-      var count = Math.round((w * h) / 8500);
-      count = Math.max(50, Math.min(170, count));
+      var count = Math.round((w * h) / (mobile ? 15000 : 8500));
+      count = Math.max(mobile ? 28 : 50, Math.min(mobile ? 70 : 170, count));
       if (reduced) count = Math.min(count, 70);
       floaters = [];
       for (var i = 0; i < count; i++) {
@@ -116,12 +118,17 @@
     /* ── Bucle ── */
     var last = performance.now();
     var travelTimer = 0;
-    var nextTravel = Math.random() * 2.5 + 1.2;
+    var nextTravel = (Math.random() * 2.5 + 1.2) * (mobile ? 1.8 : 1);
     var rafId = null;
     var running = false;
+    // En móvil se dibuja a ~30fps (mitad de trabajo, misma sensación)
+    var frameGap = mobile ? 32 : 0;
+    var lastDraw = 0;
 
     function frame(now) {
       rafId = null;
+      if (frameGap && now - lastDraw < frameGap) { loop(); return; }
+      lastDraw = now;
       var dt = (now - last) / 1000; last = now;
       if (dt > 0.1) dt = 0.1;
       var t = now / 1000;
@@ -142,7 +149,7 @@
       travelTimer += dt;
       if (travelTimer >= nextTravel) {
         travelTimer = 0;
-        nextTravel = Math.random() * 3.5 + 1.4;
+        nextTravel = (Math.random() * 3.5 + 1.4) * (mobile ? 1.8 : 1);
         spawnTraveler();
       }
       for (var j = travelers.length - 1; j >= 0; j--) {

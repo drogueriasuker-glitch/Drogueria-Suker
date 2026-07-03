@@ -3474,3 +3474,32 @@ body.theme-dark { background: var(--ink); color: #E8ECF4; }
   .float-wa-sub { font-size: .64rem; }
   .scroll-top-btn { bottom: 5rem; }
 }
+
+/* ════════════════════════════════════════════
+   OPTIMIZACIÓN MÓVIL — misma estética, menos GPU/batería.
+   Solo dispositivos táctiles; en PC no cambia nada.
+   Se congelan animaciones decorativas de fondo (quedan como
+   textura fija) y se quita el blur de las entradas; los
+   carruseles y transiciones principales se conservan.
+   ════════════════════════════════════════════ */
+@media (hover: none) and (pointer: coarse) {
+  /* Iconos flotantes de las tarjetas (≈60 animadores): quedan estáticos */
+  .nc-pill, .nc-truck, .nc-box, .nc-cert, .nc-qual, .nc-dev { animation: none; }
+
+  /* Fondos grandes del hero: blooms y glow fijos (mismo look, cero costo) */
+  .hero-bloom .bloom { animation: none; }
+  .hero-3d-glow { animation: none; }
+
+  /* Texto dorado del eslogan: gradiente fijo (sin repintar el título) */
+  .hbt-gold { animation: none; background-position: 65% 0; }
+
+  /* Entradas al hacer scroll: fade + rise sin blur (más fluido en móvil) */
+  .reveal {
+    filter: none;
+    transition:
+      opacity  .9s cubic-bezier(0.16,1,0.3,1),
+      transform 1s  cubic-bezier(0.16,1,0.3,1);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible { filter: none; }
+}
