@@ -595,9 +595,9 @@ p  { line-height: 1.7; }
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto auto;
-  column-gap: clamp(1.5rem, 3vw, 3rem);
+  column-gap: clamp(1.2rem, 2vw, 2rem);
   row-gap: 2rem;
-  padding-inline: clamp(1rem, 2.5vw, 2.2rem);
+  padding-inline: clamp(.6rem, 1.2vw, 1.1rem);
   padding-block: 3rem 2.6rem;
 }
 /* Columna de texto: el video se alinea a este bloque (eyebrow → subtítulo) */
@@ -606,15 +606,15 @@ p  { line-height: 1.7; }
 .hero .container > .hero-actions { grid-column: 1; grid-row: 2; margin-bottom: 0; align-self: start; }
 
 /* ── Video de presentación del hero ──
-   Ocupa la fila 1 de la col. 2: su altura calza EXACTA con el bloque
-   de texto (del eyebrow a "farmacia o botica"); el ancho sale del 16:9 */
+   Alineado al bloque de texto (col. 2) pero un poco más alto que él:
+   sobresale ~2.5rem arriba y abajo, centrado; el ancho sale del 16:9 */
 .hero-3d {
   position: relative;
   grid-column: 2;
   grid-row: 1 / span 2;
   justify-self: center;
-  align-self: stretch;
-  height: 100%;
+  align-self: center;
+  height: calc(100% + 5rem);
   width: auto;
   max-width: 100%;
   aspect-ratio: 16 / 9;
