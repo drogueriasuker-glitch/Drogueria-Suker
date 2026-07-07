@@ -389,6 +389,8 @@ p  { line-height: 1.7; }
 }
 .header .container {
   height: 100%;
+  max-width: 1660px;
+  padding-inline: clamp(1rem, 2.2vw, 1.6rem);
   display: flex;
   align-items: center;
   gap: 1.5rem;
