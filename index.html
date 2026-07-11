@@ -231,14 +231,6 @@
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "¿Qué productos puedo encontrar en Droguería Suker?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Medicamentos genéricos y de marca, vitaminas y suplementos, productos de cuidado personal y dispositivos médicos, con garantía de calidad."
-            }
-          },
-          {
-            "@type": "Question",
             "name": "¿Cómo hago un pedido?",
             "acceptedAnswer": {
               "@type": "Answer",
@@ -444,10 +436,22 @@
 <!-- ===================== NOSOTROS ===================== -->
 <section class="section nosotros-min" id="historia">
   <div class="container">
-    <div class="min-head reveal">
-      <span class="min-eyebrow">Quiénes somos</span>
-      <h2 class="display-lg">Tu droguería de confianza.</h2>
-      <p>Somos una distribuidora farmacéutica, comprometida con la salud de las familias, farmacias y establecimientos de salud de todo el Perú.</p>
+    <div class="nosotros-head">
+      <div class="min-head reveal">
+        <span class="min-eyebrow">Quiénes somos</span>
+        <h2 class="display-lg">Tu droguería de confianza.</h2>
+        <p>Somos una distribuidora farmacéutica, comprometida con la salud de las familias, farmacias y establecimientos de salud de todo el Perú.</p>
+      </div>
+      <div class="cert-seals reveal reveal-delay-1" aria-label="Certificaciones DIGEMID">
+        <figure class="cert-seal">
+          <img src="assets/img/certificaciones/bpa.png" alt="Sello BPA — Buenas Prácticas de Almacenamiento, certificación DIGEMID Ministerio de Salud del Perú" width="500" height="500" loading="lazy" decoding="async">
+          <figcaption><strong>BPA</strong> Buenas Prácticas<br>de Almacenamiento</figcaption>
+        </figure>
+        <figure class="cert-seal">
+          <img src="assets/img/certificaciones/bpt.jpg" alt="Sello BPT — Buenas Prácticas de Transporte, certificación DIGEMID Ministerio de Salud del Perú" width="500" height="500" loading="lazy" decoding="async">
+          <figcaption><strong>BPT</strong> Buenas Prácticas<br>de Transporte</figcaption>
+        </figure>
+      </div>
     </div>
   </div>
 
@@ -456,146 +460,96 @@
     <div class="nosotros-track" id="nosotrosTrack">
 
       <!-- 1. Stock -->
-      <div class="nosotros-card nc-has-pills">
-        <span class="nc-pills" aria-hidden="true">
-          <span class="nc-pill nc-pill-1"></span><span class="nc-pill nc-pill-2"></span>
-          <span class="nc-pill nc-pill-3"></span><span class="nc-pill nc-pill-4"></span>
-          <span class="nc-pill nc-pill-5"></span><span class="nc-pill nc-pill-6"></span>
-        </span>
+      <div class="nosotros-card">
         <span class="nc-card-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM16 3H8a2 2 0 00-2 2v2h12V5a2 2 0 00-2-2z"/></svg>
         </span>
         <h3>Stock</h3>
-        <p>Amplio inventario farmacéutico con el producto correcto al mejor precio.</p>
+        <p>Amplio inventario farmacéutico al mejor precio.</p>
       </div>
 
       <!-- 2. Calidad -->
-      <div class="nosotros-card nc-has-quality">
-        <span class="nc-quality" aria-hidden="true">
-          <span class="nc-qual nc-qual-1"></span><span class="nc-qual nc-qual-2"></span>
-          <span class="nc-qual nc-qual-3"></span><span class="nc-qual nc-qual-4"></span>
-          <span class="nc-qual nc-qual-5"></span><span class="nc-qual nc-qual-6"></span>
-        </span>
+      <div class="nosotros-card">
         <span class="nc-card-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
         </span>
         <h3>Calidad</h3>
-        <p>Solo productos con registro sanitario vigente, cadena de frío y trazabilidad completa.</p>
+        <p>Registro sanitario vigente, cadena de frío y trazabilidad.</p>
       </div>
 
       <!-- 3. Certificado por la DIGEMID -->
-      <div class="nosotros-card nc-has-certs">
-        <span class="nc-certs" aria-hidden="true">
-          <span class="nc-cert nc-cert-1"></span><span class="nc-cert nc-cert-2"></span>
-          <span class="nc-cert nc-cert-3"></span><span class="nc-cert nc-cert-4"></span>
-          <span class="nc-cert nc-cert-5"></span><span class="nc-cert nc-cert-6"></span>
-        </span>
+      <div class="nosotros-card">
         <span class="nc-card-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
         </span>
         <h3>Certificado por la DIGEMID</h3>
-        <p>Droguería autorizada y registrada ante la Dirección General de Medicamentos del Perú.</p>
+        <p>Droguería autorizada por el Ministerio de Salud del Perú.</p>
       </div>
 
       <!-- 4. Rapidez -->
-      <div class="nosotros-card nc-has-trucks">
-        <span class="nc-trucks" aria-hidden="true">
-          <span class="nc-truck nc-truck-1"></span><span class="nc-truck nc-truck-2"></span>
-          <span class="nc-truck nc-truck-3"></span><span class="nc-truck nc-truck-4"></span>
-          <span class="nc-truck nc-truck-5"></span>
-        </span>
+      <div class="nosotros-card">
         <span class="nc-card-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
         </span>
         <h3>Rapidez</h3>
-        <p>Entregamos tus pedidos a todo el Perú de forma rápida y segura.</p>
+        <p>Envíos rápidos y seguros a todo el Perú.</p>
       </div>
 
       <!-- 5. Emergencia -->
-      <div class="nosotros-card nc-has-boxes">
-        <span class="nc-boxes" aria-hidden="true">
-          <span class="nc-box nc-box-1"></span><span class="nc-box nc-box-2"></span>
-          <span class="nc-box nc-box-3"></span><span class="nc-box nc-box-4"></span>
-          <span class="nc-box nc-box-5"></span><span class="nc-box nc-box-6"></span>
-        </span>
+      <div class="nosotros-card">
         <span class="nc-card-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
         </span>
         <h3>Emergencia</h3>
-        <p>Gestionamos pedidos urgentes de medicamentos con atención prioritaria.</p>
+        <p>Pedidos urgentes con atención prioritaria.</p>
       </div>
 
       <!-- ══════════ SET 2 — copia idéntica para el bucle infinito sin cortes ══════════ -->
       <!-- (aria-hidden: los lectores de pantalla no lo leen dos veces) -->
 
       <!-- 1. Stock -->
-      <div class="nosotros-card nc-has-pills" aria-hidden="true">
-        <span class="nc-pills" aria-hidden="true">
-          <span class="nc-pill nc-pill-1"></span><span class="nc-pill nc-pill-2"></span>
-          <span class="nc-pill nc-pill-3"></span><span class="nc-pill nc-pill-4"></span>
-          <span class="nc-pill nc-pill-5"></span><span class="nc-pill nc-pill-6"></span>
-        </span>
+      <div class="nosotros-card" aria-hidden="true">
         <span class="nc-card-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM16 3H8a2 2 0 00-2 2v2h12V5a2 2 0 00-2-2z"/></svg>
         </span>
         <h3>Stock</h3>
-        <p>Amplio inventario farmacéutico con el producto correcto al mejor precio.</p>
+        <p>Amplio inventario farmacéutico al mejor precio.</p>
       </div>
 
       <!-- 2. Calidad -->
-      <div class="nosotros-card nc-has-quality" aria-hidden="true">
-        <span class="nc-quality" aria-hidden="true">
-          <span class="nc-qual nc-qual-1"></span><span class="nc-qual nc-qual-2"></span>
-          <span class="nc-qual nc-qual-3"></span><span class="nc-qual nc-qual-4"></span>
-          <span class="nc-qual nc-qual-5"></span><span class="nc-qual nc-qual-6"></span>
-        </span>
+      <div class="nosotros-card" aria-hidden="true">
         <span class="nc-card-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
         </span>
         <h3>Calidad</h3>
-        <p>Solo productos con registro sanitario vigente, cadena de frío y trazabilidad completa.</p>
+        <p>Registro sanitario vigente, cadena de frío y trazabilidad.</p>
       </div>
 
       <!-- 3. Certificado por la DIGEMID -->
-      <div class="nosotros-card nc-has-certs" aria-hidden="true">
-        <span class="nc-certs" aria-hidden="true">
-          <span class="nc-cert nc-cert-1"></span><span class="nc-cert nc-cert-2"></span>
-          <span class="nc-cert nc-cert-3"></span><span class="nc-cert nc-cert-4"></span>
-          <span class="nc-cert nc-cert-5"></span><span class="nc-cert nc-cert-6"></span>
-        </span>
+      <div class="nosotros-card" aria-hidden="true">
         <span class="nc-card-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
         </span>
         <h3>Certificado por la DIGEMID</h3>
-        <p>Droguería autorizada y registrada ante la Dirección General de Medicamentos del Perú.</p>
+        <p>Droguería autorizada por el Ministerio de Salud del Perú.</p>
       </div>
 
       <!-- 4. Rapidez -->
-      <div class="nosotros-card nc-has-trucks" aria-hidden="true">
-        <span class="nc-trucks" aria-hidden="true">
-          <span class="nc-truck nc-truck-1"></span><span class="nc-truck nc-truck-2"></span>
-          <span class="nc-truck nc-truck-3"></span><span class="nc-truck nc-truck-4"></span>
-          <span class="nc-truck nc-truck-5"></span>
-        </span>
+      <div class="nosotros-card" aria-hidden="true">
         <span class="nc-card-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
         </span>
         <h3>Rapidez</h3>
-        <p>Entregamos tus pedidos a todo el Perú de forma rápida y segura.</p>
+        <p>Envíos rápidos y seguros a todo el Perú.</p>
       </div>
 
       <!-- 5. Emergencia -->
-      <div class="nosotros-card nc-has-boxes" aria-hidden="true">
-        <span class="nc-boxes" aria-hidden="true">
-          <span class="nc-box nc-box-1"></span><span class="nc-box nc-box-2"></span>
-          <span class="nc-box nc-box-3"></span><span class="nc-box nc-box-4"></span>
-          <span class="nc-box nc-box-5"></span><span class="nc-box nc-box-6"></span>
-        </span>
+      <div class="nosotros-card" aria-hidden="true">
         <span class="nc-card-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
         </span>
         <h3>Emergencia</h3>
-        <p>Gestionamos pedidos urgentes de medicamentos con atención prioritaria.</p>
+        <p>Pedidos urgentes con atención prioritaria.</p>
       </div>
 
     </div>
@@ -608,7 +562,7 @@
     <div class="min-head reveal">
       <span class="min-eyebrow">Productos</span>
       <h2 class="display-lg">Lo que encuentras en Suker.</h2>
-      <p>Amplio inventario farmacéutico para el público, farmacias, clínicas y centros de salud.</p>
+      <p>Amplio inventario farmacéutico para abastecer tu botica, farmacias, clínicas y centros de salud.</p>
     </div>
     <div class="catalog-list">
       <a class="catalog-row reveal" href="https://wa.me/51932667799?text=Hola%20Droguer%C3%ADa%20Suker%2C%20busco%20medicamentos%20gen%C3%A9ricos" target="_blank" rel="noopener">
@@ -628,7 +582,7 @@
       </a>
       <a class="catalog-row reveal" href="https://wa.me/51932667799?text=Hola%20Droguer%C3%ADa%20Suker%2C%20busco%20medicamentos%20de%20marca" target="_blank" rel="noopener">
         <span class="cr-num">04</span>
-        <span class="cr-name">Dispositivos Médicos</span>
+        <span class="cr-name">Dispositivos Médico y Odontologico</span>
         <span class="cr-go">Consultar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </a>
     </div>
@@ -641,7 +595,7 @@
     <div class="min-head min-head-center reveal">
       <span class="min-eyebrow">Proveedores</span>
       <h2 class="display-lg">Nuestros aliados estratégicos</h2>
-      <p>Trabajamos de la mano con los principales laboratorios e industrias farmacéuticas del mundo para garantizar productos 100% originales y de la más alta calidad.</p>
+      <p>Trabajamos de la mano con los principales laboratorios e industrias farmacéuticas a nivel nacional e internacionalpara garantizar productos 100% originales y de la más alta calidad.</p>
     </div>
   </div>
 
@@ -701,7 +655,7 @@
     <div class="min-head min-head-center reveal">
       <span class="min-eyebrow">Cómo comprar</span>
       <h2 class="display-lg">Canales de Venta.</h2>
-      <p>Conectamos las principales industrias farmacéuticas con farmacias, boticas y clientes de todo el Perú, ofreciendo calidad de servicio y asesoría especializada.</p>
+      <p>Conectamos las principales industrias farmacéuticas con farmacias, boticas y clientes de todo el Perú, ofreciendo calidad de servicios.</p>
     </div>
 
     <div class="canales-grid">
@@ -723,8 +677,8 @@
           <li>Asesoría especializada</li>
           <li>Respuesta inmediata</li>
         </ul>
-        <a class="canal-cta" href="https://wa.me/51932667799?text=Buenas%2C%20quisiera%20hacer%20un%20pedido%20por%20Televentas" target="_blank" rel="noopener">
-          Llamar / Escribir
+        <a class="canal-cta" href="https://wa.me/51932667799?text=Buenas%2C%20quisiera%20hacer%20un%20pedido%20por%20Televentas" target="_blank" rel="noopener" aria-label="Llámanos o escríbenos por WhatsApp">
+          Llámanos
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
       </article>
@@ -740,14 +694,14 @@
             <span class="canal-sub">Vendedores Especializados</span>
           </div>
         </div>
-        <p class="canal-desc">Equipo de vendedores profesionales que conectan las principales industrias farmacéuticas con farmacias, boticas y centros de salud de todo el Perú.</p>
+        <p class="canal-desc">Equipo de vendedores capacitados que conectan las principales industrias farmacéuticas con farmacias, boticas y centros de salud de todo el Perú.</p>
         <ul class="canal-list">
-          <li>Atención personalizada</li>
+          <li>Atención prioritaria</li>
           <li>Visitas programadas</li>
           <li>Soporte continuo</li>
         </ul>
-        <a class="canal-cta" href="https://wa.me/51932667799?text=Buenas%2C%20quisiera%20contactar%20con%20la%20Fuerza%20de%20Ventas" target="_blank" rel="noopener">
-          Contactar asesor
+        <a class="canal-cta" href="https://www.google.com/maps/place/Droguer%C3%ADa+Suker/@-15.4792517,-70.1336446,17z" target="_blank" rel="noopener" aria-label="Ver la ubicación exacta de Droguería Suker en Google Maps">
+          Visítanos
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
       </article>
@@ -769,7 +723,7 @@
       <div class="contact-min-info reveal">
         <div class="cmi-row">
           <strong>Dirección</strong>
-          <span>3 De Octubre 322 · Juliaca 21102, Puno, Perú</span>
+          <span><a href="https://www.google.com/maps/place/Droguer%C3%ADa+Suker/@-15.4792517,-70.1336446,17z" target="_blank" rel="noopener" aria-label="Ver la ubicación exacta de Droguería Suker en Google Maps">AV. 3 de Octubre 322  JULIACA-PUNO-PERÚ</a></span>
         </div>
         <div class="cmi-row">
           <strong>Horario</strong>
@@ -777,11 +731,11 @@
         </div>
         <div class="cmi-row">
           <strong>Correo</strong>
-          <span><a href="mailto:drogueriasuker@gmail.com">drogueriasuker@gmail.com</a></span>
+          <span><a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=drogueriasuker@gmail.com" target="_blank" rel="noopener" aria-label="Escribir un correo a Droguería Suker en Gmail">drogueriasuker@gmail.com</a></span>
         </div>
         <div class="cmi-row">
           <strong>Delivery</strong>
-          <span>Envíos a nivel nacional · Hasta tu Farmacia o Botica</span>
+          <span>Envíos a nivel nacional · Hasta tu establecimiento de salud</span>
         </div>
         <div class="cmi-row">
           <strong>Redes</strong>
@@ -840,16 +794,6 @@
     <div class="faq-list">
       <details class="faq-item reveal">
         <summary>
-          <span class="faq-q">¿Qué productos puedo encontrar en Droguería Suker?</span>
-          <span class="faq-ico" aria-hidden="true"></span>
-        </summary>
-        <div class="faq-a">
-          <p>Medicamentos genéricos y de marca, vitaminas y suplementos, productos de cuidado personal y dispositivos médicos, con garantía de calidad.</p>
-        </div>
-      </details>
-
-      <details class="faq-item reveal">
-        <summary>
           <span class="faq-q">¿Cómo hago un pedido?</span>
           <span class="faq-ico" aria-hidden="true"></span>
         </summary>
@@ -884,7 +828,7 @@
           <span class="faq-ico" aria-hidden="true"></span>
         </summary>
         <div class="faq-a">
-          <p>Nuestra sede está en Calle 3 de Octubre 322, Juliaca, Puno, Perú. Desde aquí despachamos los envíos a todo el país.</p>
+          <p>Nuestra sede está en AV. 3 de Octubre 322  JULIACA-PUNO-PERÚ. Desde aquí despachamos los envíos a todo el país.</p>
         </div>
       </details>
     </div>
@@ -944,9 +888,9 @@
         <br>
         <h4>Dirección</h4>
         <p style="font-size:.88rem;line-height:1.6">
-          3 De Octubre 322<br>
-          Juliaca 21102<br>
-          Puno, Perú
+          AV. 3 de Octubre 322<br>
+          JULIACA 21102<br>
+          PUNO-PERÚ
         </p>
       </div>
 
@@ -954,7 +898,7 @@
 
     <div class="footer-bottom reveal reveal-delay-3">
       <p>© 2026 Droguería Suker · Todos los derechos reservados · Juliaca, Perú</p>
-      <p><a href="mailto:drogueriasuker@gmail.com">drogueriasuker@gmail.com</a></p>
+      <p><a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=drogueriasuker@gmail.com" target="_blank" rel="noopener" aria-label="Escribir un correo a Droguería Suker en Gmail">drogueriasuker@gmail.com</a></p>
     </div>
   </div>
 </footer>

@@ -250,6 +250,21 @@
   }
 
   /* ============================================================
+     5b. MARQUEES — pausa cuando no están en pantalla
+     (la cinta solo anima si se ve → menos GPU y arranque fluido)
+     ============================================================ */
+  function initMarqueePause() {
+    if (!("IntersectionObserver" in window)) return;
+    document.querySelectorAll(".nosotros-marquee, .prov-marquee").forEach(function (mq) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          entry.target.classList.toggle("is-offscreen", !entry.isIntersecting);
+        });
+      }, { rootMargin: "160px 0px" }).observe(mq);
+    });
+  }
+
+  /* ============================================================
      6. CARD TILT (3D hover on service cards)
      ============================================================ */
   function initTilt() {
@@ -632,6 +647,7 @@
     safe(initMobileNav,    "mobileNav");
     safe(initSmoothScroll, "smoothScroll");
     safe(initReveal,       "reveal");
+    safe(initMarqueePause, "marqueePause");
     safe(initSectionVeil,  "sectionVeil");
     safe(initTilt,         "tilt");
     safe(initScrollTop,    "scrollTop");

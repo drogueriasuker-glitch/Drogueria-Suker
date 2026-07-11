@@ -419,11 +419,12 @@ p  { line-height: 1.7; }
   outline-color: var(--gold);
 }
 .logo-text {
-  font-size: 1.55rem;
+  font-size: 2.15rem;
   font-weight: 800;
+  text-transform: uppercase;
   color: var(--navy);
-  line-height: 1.15;
-  letter-spacing: -.02em;
+  line-height: 1.1;
+  letter-spacing: -.01em;
   background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 55%, var(--gold-dark) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -2238,6 +2239,35 @@ body.theme-dark { background: var(--ink); color: #E8ECF4; }
   padding-bottom: clamp(4rem, 10vh, 7rem);
 }
 
+/* — Cabecera de Nosotros: texto + sellos DIGEMID (BPA / BPT) — */
+.nosotros-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+.nosotros-head .min-head { margin-bottom: 0; }
+.cert-seals { display: flex; flex-wrap: wrap; justify-content: center; flex-shrink: 0; gap: clamp(1.4rem, 3vw, 2.6rem); }
+.cert-seal { margin: 0; text-align: center; }
+.cert-seal img {
+  display: block; margin-inline: auto;
+  width: clamp(120px, 14vw, 185px); height: auto;
+}
+.cert-seal figcaption {
+  margin-top: .85rem;
+  font-family: 'Sora', sans-serif; font-size: .7rem; font-weight: 600;
+  letter-spacing: .05em; line-height: 1.5;
+  color: rgba(255,255,255,.55);
+}
+.cert-seal figcaption strong {
+  display: block; color: var(--gold);
+  font-size: .78rem; letter-spacing: .18em; margin-bottom: .2rem;
+}
+@media (max-width: 920px) {
+  .nosotros-head { flex-direction: column; align-items: flex-start; }
+  .cert-seals { align-self: center; }
+  .cert-seal img { width: clamp(110px, 32vw, 150px); }
+}
+
 /* — Contenedor del carrusel (full-width, overflow oculto) — */
 .nosotros-marquee {
   position: relative;
@@ -2270,7 +2300,9 @@ body.theme-dark { background: var(--ink); color: #E8ECF4; }
   flex-wrap: nowrap;
   width: max-content;
   align-items: stretch;
-  animation: nosotrosBelt var(--belt-duration, 48s) linear infinite;
+  animation: nosotrosBelt var(--belt-duration, 40s) linear infinite;
+  /* Arranca "ya en movimiento": el primer vistazo nunca ve la cinta alineada al borde */
+  animation-delay: -8s;
   /* Capa propia en GPU → desplazamiento fluido sin repintar */
   will-change: transform;
   backface-visibility: hidden;
@@ -2280,6 +2312,12 @@ body.theme-dark { background: var(--ink); color: #E8ECF4; }
 /* — Pausa al pasar el cursor (o al enfocar con teclado) — */
 .nosotros-marquee:hover .nosotros-track,
 .nosotros-marquee:focus-within .nosotros-track {
+  animation-play-state: paused;
+}
+
+/* — Pausa cuando la sección no está en pantalla (JS pone .is-offscreen) — */
+.nosotros-marquee.is-offscreen .nosotros-track,
+.prov-marquee.is-offscreen .prov-track {
   animation-play-state: paused;
 }
 
@@ -2699,266 +2737,6 @@ body.theme-dark { background: var(--ink); color: #E8ECF4; }
   .prov-logo[aria-hidden="true"] { display: none; }
 }
 
-/* ---- Pastillas flotantes de fondo (tarjeta Medicamentos Generales) ---- */
-.nc-pills {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.nc-pill {
-  position: absolute;
-  display: block;
-  border-radius: 999px;
-  opacity: .22;
-  transition: opacity .4s ease;
-  /* cápsula bicolor: mitad dorada translúcida, mitad clara */
-  background: linear-gradient(90deg,
-    rgba(229,184,38,.85) 0%,
-    rgba(229,184,38,.85) 50%,
-    rgba(255,255,255,.9) 50%,
-    rgba(255,255,255,.9) 100%);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.25),
-    inset 6px 0 10px -6px rgba(0,0,0,.35),
-    0 4px 12px rgba(0,0,0,.25);
-  filter: drop-shadow(0 0 6px rgba(229,184,38,.2));
-  will-change: transform;
-}
-/* línea divisoria central de la cápsula */
-.nc-pill::after {
-  content: "";
-  position: absolute;
-  top: 0; bottom: 0; left: 50%;
-  width: 1px;
-  transform: translateX(-.5px);
-  background: rgba(0,0,0,.28);
-}
-.nc-pill-1 { width: 54px; height: 21px; top: 14%; left: -10%; animation: ncPillDrift  17s ease-in-out infinite; }
-.nc-pill-2 { width: 38px; height: 15px; top: 60%; left: 12%;  animation: ncPillDrift  21s ease-in-out -4s  infinite; }
-.nc-pill-3 { width: 30px; height: 12px; top: 30%; left: 70%;  animation: ncPillDrift2 19s ease-in-out -8s  infinite; }
-.nc-pill-4 { width: 46px; height: 18px; top: 78%; left: 60%;  animation: ncPillDrift2 24s ease-in-out -2s  infinite; }
-.nc-pill-5 { width: 24px; height: 10px; top:  8%; left: 40%;  animation: ncPillDrift  15s ease-in-out -6s  infinite; }
-.nc-pill-6 { width: 34px; height: 14px; top: 48%; left: 84%;  animation: ncPillDrift2 22s ease-in-out -11s infinite; }
-
-@keyframes ncPillDrift {
-  0%   { transform: translate(0, 0) rotate(18deg); }
-  25%  { transform: translate(34px, -22px) rotate(48deg); }
-  50%  { transform: translate(64px, 8px) rotate(96deg); }
-  75%  { transform: translate(28px, 30px) rotate(138deg); }
-  100% { transform: translate(0, 0) rotate(198deg); }
-}
-@keyframes ncPillDrift2 {
-  0%   { transform: translate(0, 0) rotate(-12deg); }
-  25%  { transform: translate(-30px, 24px) rotate(-52deg); }
-  50%  { transform: translate(-58px, -10px) rotate(-104deg); }
-  75%  { transform: translate(-24px, -28px) rotate(-150deg); }
-  100% { transform: translate(0, 0) rotate(-192deg); }
-}
-/* las pastillas brillan un poco al pasar el cursor */
-.nc-has-pills:hover .nc-pill { opacity: .34; }
-
-@media (prefers-reduced-motion: reduce) {
-  .nc-pill { animation: none !important; }
-}
-
-/* ---- Carros de delivery flotantes de fondo (tarjeta Delivery a Domicilio) ---- */
-.nc-trucks {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.nc-truck {
-  position: absolute;
-  display: block;
-  opacity: .2;
-  transition: opacity .4s ease;
-  will-change: transform;
-  filter: drop-shadow(0 3px 6px rgba(0,0,0,.3));
-  background: center / contain no-repeat
-    url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2040'%3E%3Cg%20fill='%23E5B826'%20stroke='rgba(255,255,255,.45)'%20stroke-width='1.5'%3E%3Crect%20x='2'%20y='6'%20width='34'%20height='22'%20rx='2'/%3E%3Cpath%20d='M36%2012h12l10%209v7h-22z'/%3E%3C/g%3E%3Cg%20fill='%230B1322'%3E%3Ccircle%20cx='13'%20cy='30'%20r='5'/%3E%3Ccircle%20cx='47'%20cy='30'%20r='5'/%3E%3C/g%3E%3Cg%20fill='%23E5B826'%3E%3Ccircle%20cx='13'%20cy='30'%20r='2'/%3E%3Ccircle%20cx='47'%20cy='30'%20r='2'/%3E%3C/g%3E%3C/svg%3E");
-}
-.nc-truck-1 { width: 58px; height: 36px; top: 16%; left: -12%; animation: ncTruckDrift  19s ease-in-out infinite; }
-.nc-truck-2 { width: 42px; height: 26px; top: 62%; left: 8%;   animation: ncTruckDrift  24s ease-in-out -6s infinite; }
-.nc-truck-3 { width: 34px; height: 21px; top: 38%; left: 78%;  animation: ncTruckDrift2 21s ease-in-out -9s infinite; }
-.nc-truck-4 { width: 48px; height: 30px; top: 80%; left: 64%;  animation: ncTruckDrift2 26s ease-in-out -3s infinite; }
-.nc-truck-5 { width: 28px; height: 18px; top: 6%;  left: 46%;  animation: ncTruckDrift  17s ease-in-out -8s infinite; }
-
-@keyframes ncTruckDrift {
-  0%   { transform: translate(0, 0) rotate(-2deg); }
-  25%  { transform: translate(40px, -10px) rotate(2deg); }
-  50%  { transform: translate(78px, 4px) rotate(-1deg); }
-  75%  { transform: translate(36px, 12px) rotate(2deg); }
-  100% { transform: translate(0, 0) rotate(-2deg); }
-}
-/* estos van hacia el otro lado (espejados) */
-@keyframes ncTruckDrift2 {
-  0%   { transform: translate(0, 0) rotate(2deg) scaleX(-1); }
-  25%  { transform: translate(-38px, 10px) rotate(-2deg) scaleX(-1); }
-  50%  { transform: translate(-72px, -6px) rotate(1deg) scaleX(-1); }
-  75%  { transform: translate(-32px, -12px) rotate(-2deg) scaleX(-1); }
-  100% { transform: translate(0, 0) rotate(2deg) scaleX(-1); }
-}
-.nc-has-trucks:hover .nc-truck { opacity: .3; }
-
-@media (prefers-reduced-motion: reduce) {
-  .nc-truck { animation: none !important; }
-}
-
-/* ---- Cajas/paquetes flotantes de fondo (tarjeta Pedidos de Emergencia) ---- */
-.nc-boxes {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.nc-box {
-  position: absolute;
-  display: block;
-  opacity: .2;
-  transition: opacity .4s ease;
-  will-change: transform;
-  filter: drop-shadow(0 3px 6px rgba(0,0,0,.3));
-  background: center / contain no-repeat
-    url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2048%2048'%3E%3Cg%20stroke='rgba(255,255,255,.4)'%20stroke-width='1.2'%20stroke-linejoin='round'%3E%3Cpath%20fill='%23E5B826'%20d='M24%204%2044%2014v20L24%2044%204%2034V14z'/%3E%3Cpath%20fill='%23C9A020'%20d='M24%2024%2044%2014v20L24%2044z'/%3E%3Cpath%20fill='%23F0CB50'%20d='M4%2014%2024%204%2044%2014%2024%2024z'/%3E%3C/g%3E%3Cpath%20fill='none'%20stroke='rgba(255,255,255,.65)'%20stroke-width='2.4'%20d='M24%2024V44'/%3E%3C/svg%3E");
-}
-.nc-box-1 { width: 40px; height: 40px; top: 12%; left: -10%; animation: ncBoxDrift  18s ease-in-out infinite; }
-.nc-box-2 { width: 28px; height: 28px; top: 58%; left: 10%;  animation: ncBoxDrift2 22s ease-in-out -5s  infinite; }
-.nc-box-3 { width: 22px; height: 22px; top: 30%; left: 72%;  animation: ncBoxDrift  20s ease-in-out -9s  infinite; }
-.nc-box-4 { width: 34px; height: 34px; top: 76%; left: 60%;  animation: ncBoxDrift2 25s ease-in-out -2s  infinite; }
-.nc-box-5 { width: 18px; height: 18px; top: 8%;  left: 44%;  animation: ncBoxDrift  16s ease-in-out -7s  infinite; }
-.nc-box-6 { width: 26px; height: 26px; top: 46%; left: 86%;  animation: ncBoxDrift2 23s ease-in-out -12s infinite; }
-
-@keyframes ncBoxDrift {
-  0%   { transform: translate(0, 0) rotate(-8deg); }
-  25%  { transform: translate(30px, -20px) rotate(8deg); }
-  50%  { transform: translate(58px, 6px) rotate(-4deg); }
-  75%  { transform: translate(26px, 26px) rotate(10deg); }
-  100% { transform: translate(0, 0) rotate(-8deg); }
-}
-@keyframes ncBoxDrift2 {
-  0%   { transform: translate(0, 0) rotate(6deg); }
-  25%  { transform: translate(-28px, 22px) rotate(-8deg); }
-  50%  { transform: translate(-54px, -8px) rotate(4deg); }
-  75%  { transform: translate(-22px, -24px) rotate(-10deg); }
-  100% { transform: translate(0, 0) rotate(6deg); }
-}
-.nc-has-boxes:hover .nc-box { opacity: .3; }
-
-@media (prefers-reduced-motion: reduce) {
-  .nc-box { animation: none !important; }
-}
-
-
-/* ---- Certificados flotantes de fondo (tarjeta Certificados DIGEMID) ---- */
-.nc-certs {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-}
-.nc-cert {
-  position: absolute;
-  display: block;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: .13;
-}
-/* diploma / certificado */
-.nc-cert-1, .nc-cert-4 {
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2048%2048'%3E%3Crect%20x='4'%20y='5'%20width='40'%20height='30'%20rx='3'%20fill='%23E5B826'%20stroke='rgba(255,255,255,.4)'%20stroke-width='1.4'/%3E%3Crect%20x='14'%20y='35'%20width='20'%20height='8'%20rx='1'%20fill='%23C9A020'/%3E%3Cline%20x1='10'%20y1='15'%20x2='38'%20y2='15'%20stroke='%230B1322'%20stroke-width='2'%20stroke-linecap='round'/%3E%3Cline%20x1='10'%20y1='21'%20x2='38'%20y2='21'%20stroke='%230B1322'%20stroke-width='2'%20stroke-linecap='round'/%3E%3Cline%20x1='10'%20y1='27'%20x2='28'%20y2='27'%20stroke='%230B1322'%20stroke-width='2'%20stroke-linecap='round'/%3E%3C/svg%3E");
-}
-/* escudo con verificación */
-.nc-cert-2, .nc-cert-5 {
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2048%2048'%3E%3Cpath%20d='M24%204L8%2011v12c0%2010%207%2018%2016%2021%209-3%2016-11%2016-21V11Z'%20fill='%23E5B826'%20stroke='rgba(255,255,255,.4)'%20stroke-width='1.4'/%3E%3Cpath%20d='M16%2023l5%205%2011-11'%20fill='none'%20stroke='%230B1322'%20stroke-width='3'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3C/svg%3E");
-}
-/* medalla con cinta */
-.nc-cert-3, .nc-cert-6 {
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2048%2048'%3E%3Cpath%20d='M18%203h12l-3%2014h6l-9%2010-9-10h6Z'%20fill='%23E5B826'%20stroke='rgba(255,255,255,.3)'%20stroke-width='1'/%3E%3Ccircle%20cx='24'%20cy='34'%20r='10'%20fill='%23E5B826'%20stroke='rgba(255,255,255,.4)'%20stroke-width='1.4'/%3E%3Cpath%20d='M19%2034l4%204%207-8'%20fill='none'%20stroke='%230B1322'%20stroke-width='2.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3C/svg%3E");
-}
-.nc-cert-1 { width: 40px; height: 40px; top: 12%; left: -8%;  animation: ncCertFloat  20s ease-in-out infinite; }
-.nc-cert-2 { width: 28px; height: 28px; top: 60%; left: 12%;  animation: ncCertFloat2 24s ease-in-out -6s  infinite; }
-.nc-cert-3 { width: 22px; height: 22px; top: 30%; left: 74%;  animation: ncCertFloat  22s ease-in-out -10s infinite; }
-.nc-cert-4 { width: 34px; height: 34px; top: 78%; left: 58%;  animation: ncCertFloat2 27s ease-in-out -3s  infinite; }
-.nc-cert-5 { width: 18px; height: 18px; top:  6%; left: 46%;  animation: ncCertFloat  17s ease-in-out -8s  infinite; }
-.nc-cert-6 { width: 26px; height: 26px; top: 48%; left: 88%;  animation: ncCertFloat2 25s ease-in-out -13s infinite; }
-
-@keyframes ncCertFloat {
-  0%   { transform: translate(0, 0) rotate(-5deg); }
-  25%  { transform: translate(25px, -18px) rotate(5deg); }
-  50%  { transform: translate(48px, -6px) rotate(-3deg); }
-  75%  { transform: translate(20px, -22px) rotate(7deg); }
-  100% { transform: translate(0, 0) rotate(-5deg); }
-}
-@keyframes ncCertFloat2 {
-  0%   { transform: translate(0, 0) rotate(4deg); }
-  25%  { transform: translate(-22px, 20px) rotate(-5deg); }
-  50%  { transform: translate(-44px, -6px) rotate(3deg); }
-  75%  { transform: translate(-18px, -20px) rotate(-7deg); }
-  100% { transform: translate(0, 0) rotate(4deg); }
-}
-.nc-has-certs:hover .nc-cert { opacity: .3; }
-
-/* ---- Iconos de calidad flotantes de fondo (tarjeta Calidad Garantizada) ---- */
-.nc-quality {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-}
-.nc-qual {
-  position: absolute;
-  display: block;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: .12;
-}
-/* checkmark en círculo */
-.nc-qual-1, .nc-qual-4 {
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2048%2048'%3E%3Ccircle%20cx='24'%20cy='24'%20r='20'%20fill='%23E5B826'%20stroke='rgba(255,255,255,.4)'%20stroke-width='1.4'/%3E%3Cpath%20d='M14%2024l7%207%2013-14'%20fill='none'%20stroke='%230B1322'%20stroke-width='3.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3C/svg%3E");
-}
-/* estrella de calidad */
-.nc-qual-2, .nc-qual-5 {
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2048%2048'%3E%3Cpolygon%20points='24,4%2029,17%2043,17%2032,26%2036,40%2024,31%2012,40%2016,26%205,17%2019,17'%20fill='%23E5B826'%20stroke='rgba(255,255,255,.4)'%20stroke-width='1.4'%20stroke-linejoin='round'/%3E%3C/svg%3E");
-}
-/* rombo / diamante de calidad */
-.nc-qual-3, .nc-qual-6 {
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2048%2048'%3E%3Cpath%20d='M24%204l20%2020-20%2020L4%2024Z'%20fill='%23E5B826'%20stroke='rgba(255,255,255,.4)'%20stroke-width='1.4'%20stroke-linejoin='round'/%3E%3Cpath%20d='M18%2024l5%205%207-10'%20fill='none'%20stroke='%230B1322'%20stroke-width='2.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3C/svg%3E");
-}
-.nc-qual-1 { width: 36px; height: 36px; top: 10%; left: -6%;  animation: ncQualFloat  19s ease-in-out infinite; }
-.nc-qual-2 { width: 26px; height: 26px; top: 62%; left: 10%;  animation: ncQualFloat2 23s ease-in-out -5s  infinite; }
-.nc-qual-3 { width: 20px; height: 20px; top: 32%; left: 76%;  animation: ncQualFloat  21s ease-in-out -9s  infinite; }
-.nc-qual-4 { width: 30px; height: 30px; top: 75%; left: 56%;  animation: ncQualFloat2 26s ease-in-out -3s  infinite; }
-.nc-qual-5 { width: 16px; height: 16px; top:  5%; left: 48%;  animation: ncQualFloat  16s ease-in-out -7s  infinite; }
-.nc-qual-6 { width: 24px; height: 24px; top: 50%; left: 86%;  animation: ncQualFloat2 24s ease-in-out -12s infinite; }
-
-@keyframes ncQualFloat {
-  0%   { transform: translate(0, 0) rotate(-4deg); }
-  25%  { transform: translate(22px, -16px) rotate(6deg); }
-  50%  { transform: translate(44px, -4px) rotate(-3deg); }
-  75%  { transform: translate(18px, -20px) rotate(8deg); }
-  100% { transform: translate(0, 0) rotate(-4deg); }
-}
-@keyframes ncQualFloat2 {
-  0%   { transform: translate(0, 0) rotate(5deg); }
-  25%  { transform: translate(-20px, 18px) rotate(-5deg); }
-  50%  { transform: translate(-42px, -4px) rotate(3deg); }
-  75%  { transform: translate(-16px, -18px) rotate(-7deg); }
-  100% { transform: translate(0, 0) rotate(5deg); }
-}
-.nc-has-quality:hover .nc-qual { opacity: .3; }
-
-@media (prefers-reduced-motion: reduce) {
-  .nc-qual { animation: none !important; }
-}
 
 /* badge estático (sin link WhatsApp) */
 .nc-cta-badge {
@@ -2969,9 +2747,6 @@ body.theme-dark { background: var(--ink); color: #E8ECF4; }
 .nc-cta-badge svg { width: 15px; height: 15px; transition: none; }
 .nosotros-card:hover .nc-cta-badge svg { transform: none; }
 
-@media (prefers-reduced-motion: reduce) {
-  .nc-cert { animation: none !important; }
-}
 
 /* ---- FAQ / Preguntas frecuentes ---- */
 .faq-min { background: var(--ink); padding-block: clamp(5rem, 12vh, 9rem); }
@@ -3153,7 +2928,7 @@ body.theme-dark { background: var(--ink); color: #E8ECF4; }
   .header .container { gap: .9rem; }
   .logo { gap: .55rem; }
   .logo-img { width: 44px; height: 44px; outline-offset: 1px; }
-  .logo-text { font-size: 1.18rem; letter-spacing: -.01em; }
+  .logo-text { font-size: 1.42rem; letter-spacing: -.01em; }
 
   /* — Menú móvil más espaciado y elegante — */
   .nav-overlay { gap: .35rem; }
@@ -3234,7 +3009,6 @@ body.theme-dark { background: var(--ink); color: #E8ECF4; }
    ════════════════════════════════════════════ */
 @media (hover: none) and (pointer: coarse) {
   /* Iconos flotantes de las tarjetas (≈60 animadores): quedan estáticos */
-  .nc-pill, .nc-truck, .nc-box, .nc-cert, .nc-qual { animation: none; }
 
   /* Fondos grandes del hero: blooms y glow fijos (mismo look, cero costo) */
   .hero-bloom .bloom { animation: none; }
