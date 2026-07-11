@@ -2669,9 +2669,32 @@ body.theme-dark { background: var(--ink); color: #E8ECF4; }
 .lead-status.is-ok    { display: block; color: #7DDE92; }
 .lead-status.is-error { display: block; color: #F0A6A6; }
 
+/* — Recuadro doble: Fuerza de Ventas + Regístrate en una sola tarjeta — */
+.canal-card-doble {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.canal-mitad { display: flex; flex-direction: column; min-width: 0; }
+.canal-mitad:first-child { padding-right: clamp(1.4rem, 2.6vw, 2.2rem); }
+.canal-mitad + .canal-mitad {
+  border-left: 1px solid rgba(229,184,38,.16);
+  padding-left: clamp(1.4rem, 2.6vw, 2.2rem);
+}
+
 /* — Responsive — */
 @media (max-width: 780px) {
   .canales-grid { grid-template-columns: 1fr; max-width: 460px; margin-inline: auto; }
+  /* el recuadro doble se apila: mitades una debajo de otra */
+  .canal-card-doble { grid-column: auto; grid-template-columns: 1fr; }
+  .canal-mitad:first-child { padding-right: 0; padding-bottom: 1.5rem; }
+  .canal-mitad + .canal-mitad {
+    border-left: 0;
+    border-top: 1px solid rgba(229,184,38,.16);
+    padding-left: 0;
+    padding-top: 1.5rem;
+  }
 }
 @media (max-width: 767px) {
   .canal-card { padding: 1.7rem 1.5rem 1.5rem; border-radius: 16px; }
