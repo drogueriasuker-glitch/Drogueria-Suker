@@ -15,6 +15,11 @@
   var WA = "51932667799";
   var WA_BASE = "https://wa.me/" + WA;
 
+  /* URL del Web App de Google Apps Script que guarda los registros
+     del formulario "Regístrate" en Google Sheets (termina en /exec).
+     Mientras esté vacía, el formulario envía los datos por WhatsApp. */
+  var LEAD_FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbx4FwnwuU8wLNeajdRWDbga_PYr2Wh2qyL8aYQfcuiN2865arRBEMXTvP5aSih91qxv/exec";
+
   /* ============================================================
      1. SPLASH — Cinematic intro sequence
         0.0s  logo scales in + rings pulse
@@ -370,6 +375,90 @@
   }
 
   /* ============================================================
+     9b. FORMULARIO DE REGISTRO (tarjeta "Regístrate")
+     Guarda los datos en Google Sheets vía Apps Script; si el
+     endpoint no está configurado o falla, envía por WhatsApp.
+     ============================================================ */
+  function initLeadForm() {
+    var form = document.getElementById("leadForm");
+    if (!form) return;
+
+    var nombreEl  = document.getElementById("lead-nombre");
+    var celularEl = document.getElementById("lead-celular");
+    var tipoEl    = document.getElementById("lead-tipo");
+    var boton     = form.querySelector(".lead-submit");
+    var status    = form.querySelector(".lead-status");
+
+    function marcar(el) {
+      if (el) { el.focus(); el.style.borderColor = "#E5B826"; }
+    }
+    function aviso(texto, esError) {
+      if (!status) return;
+      status.textContent = texto;
+      status.classList.toggle("is-ok", !esError);
+      status.classList.toggle("is-error", !!esError);
+    }
+    function porWhatsApp(nombre, celular, tipo) {
+      var text = "Hola Droguería Suker, soy " + nombre + " (" + tipo + "). " +
+                 "Mi celular es " + celular + " y quiero registrarme para recibir atención personalizada.";
+      window.open(WA_BASE + "?text=" + encodeURIComponent(text), "_blank", "noopener,noreferrer");
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var nombre  = (nombreEl  ? nombreEl.value  : "").trim();
+      var celular = (celularEl ? celularEl.value : "").replace(/\D/g, "");
+      var tipo    = tipoEl ? tipoEl.value : "";
+      var hp      = (form.elements.website ? form.elements.website.value : "");
+
+      if (!nombre) { marcar(nombreEl); return; }
+      if (!/^9\d{8}$/.test(celular)) {
+        marcar(celularEl);
+        aviso("El celular debe tener 9 dígitos y empezar con 9.", true);
+        return;
+      }
+
+      if (!LEAD_FORM_ENDPOINT) {
+        porWhatsApp(nombre, celular, tipo);
+        aviso("¡Gracias, " + nombre + "! Completa el envío en WhatsApp.", false);
+        form.reset();
+        return;
+      }
+
+      if (boton) boton.disabled = true;
+      aviso("Enviando…", false);
+
+      var datos = new URLSearchParams();
+      datos.append("nombre", nombre);
+      datos.append("celular", celular);
+      datos.append("tipo", tipo);
+      datos.append("website", hp); // honeypot: el script descarta si viene lleno
+
+      fetch(LEAD_FORM_ENDPOINT, { method: "POST", mode: "no-cors", body: datos })
+        .then(function () {
+          aviso("¡Gracias, " + nombre + "! Registramos tus datos y un asesor te contactará pronto.", false);
+          form.reset();
+        })
+        .catch(function () {
+          // Sin conexión con Google: no se pierde el contacto, va por WhatsApp
+          porWhatsApp(nombre, celular, tipo);
+          aviso("No pudimos guardar el registro; completa el envío en WhatsApp.", true);
+        })
+        .then(function () {
+          if (boton) boton.disabled = false;
+        });
+    });
+
+    // Limpia la marca dorada de error al volver a escribir
+    [nombreEl, celularEl].forEach(function (el) {
+      if (el) el.addEventListener("input", function () {
+        el.style.borderColor = "";
+        if (status) { status.textContent = ""; status.classList.remove("is-ok", "is-error"); }
+      });
+    });
+  }
+
+  /* ============================================================
      10. GSAP SCROLL ANIMATIONS
      NOTE: Hero entrance fires AFTER splash exits (suker:splashDone).
      All other sections use CSS .reveal to avoid GSAP opacity conflict.
@@ -652,6 +741,7 @@
     safe(initTilt,         "tilt");
     safe(initScrollTop,    "scrollTop");
     safe(initWAForm,       "waForm");
+    safe(initLeadForm,     "leadForm");
     safe(initHeroEntrance, "heroEntrance");
     safe(initBloomParallax,"bloomParallax");
     safe(initLockupRotator,"lockupRotator");

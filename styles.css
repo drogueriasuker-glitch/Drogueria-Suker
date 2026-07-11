@@ -2478,10 +2478,13 @@ body.theme-dark { background: var(--ink); color: #E8ECF4; }
 /* grid de 2 columnas centradas */
 .canales-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 420px));
+  grid-template-columns: repeat(3, minmax(0, 360px));
   gap: 1.75rem;
   justify-content: center;
   perspective: 1400px;
+}
+@media (max-width: 1080px) {
+  .canales-grid { grid-template-columns: repeat(2, minmax(0, 420px)); }
 }
 
 /* — Tarjeta — */
@@ -2617,6 +2620,54 @@ body.theme-dark { background: var(--ink); color: #E8ECF4; }
   gap: .8rem;
 }
 .canal-cta:hover svg { transform: translateX(4px); }
+
+/* — Formulario de registro (tarjeta Regístrate) — */
+.lead-form { display: flex; flex-direction: column; gap: .85rem; margin-top: .25rem; }
+.lead-field { display: flex; flex-direction: column; gap: .35rem; }
+.lead-field label {
+  color: var(--gold);
+  font-family: 'Sora', sans-serif;
+  font-size: .68rem; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase;
+}
+.lead-field input,
+.lead-field select {
+  width: 100%;
+  color: #E8ECF4;
+  font-size: .92rem;
+  padding: .68rem .9rem;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(229,184,38,.25);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color .3s ease, background .3s ease, box-shadow .3s ease;
+}
+.lead-field input::placeholder { color: rgba(255,255,255,.3); }
+.lead-field input:focus,
+.lead-field select:focus {
+  border-color: var(--gold);
+  background: rgba(255,255,255,.08);
+  box-shadow: 0 0 0 3px rgba(229,184,38,.14);
+}
+.lead-field select {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  /* flecha dorada propia (la nativa no se puede tematizar) */
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23E5B826'%20stroke-width='2'%3E%3Cpath%20stroke-linecap='round'%20stroke-linejoin='round'%20d='M6%209l6%206%206-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right .8rem center;
+  background-size: 16px;
+  padding-right: 2.4rem;
+}
+.lead-field select option { background: var(--ink-2); color: #E8ECF4; }
+/* honeypot: fuera de la vista de humanos, visible para bots */
+.lead-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.lead-submit { border: 1px solid rgba(229,184,38,.35); cursor: pointer; font: inherit; font-family: 'Sora', sans-serif; font-size: .86rem; font-weight: 700; }
+.lead-submit:disabled { opacity: .55; cursor: wait; }
+.lead-status { display: none; font-size: .85rem; line-height: 1.5; margin: 0; }
+.lead-status.is-ok    { display: block; color: #7DDE92; }
+.lead-status.is-error { display: block; color: #F0A6A6; }
 
 /* — Responsive — */
 @media (max-width: 780px) {

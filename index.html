@@ -706,6 +706,46 @@
         </a>
       </article>
 
+      <!-- 3. Regístrate (formulario de clientes potenciales) -->
+      <article class="canal-card reveal">
+        <div class="canal-head">
+          <span class="canal-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          </span>
+          <div class="canal-titles">
+            <h3>Regístrate</h3>
+            <span class="canal-sub">Atención Personalizada</span>
+          </div>
+        </div>
+        <p class="canal-desc">Déjanos tus datos y un asesor se comunicará contigo para atender tu farmacia, botica o establecimiento de salud.</p>
+        <form class="lead-form" id="leadForm" novalidate>
+          <div class="lead-field">
+            <label for="lead-nombre">Nombre</label>
+            <input type="text" id="lead-nombre" name="nombre" autocomplete="name" placeholder="Tu nombre" required>
+          </div>
+          <div class="lead-field">
+            <label for="lead-celular">Número de celular</label>
+            <input type="tel" id="lead-celular" name="celular" autocomplete="tel" inputmode="numeric" pattern="9[0-9]{8}" maxlength="9" placeholder="9XXXXXXXX" required>
+          </div>
+          <div class="lead-field">
+            <label for="lead-tipo">Establecimiento</label>
+            <select id="lead-tipo" name="tipo" required>
+              <option value="Farmacia">Farmacia</option>
+              <option value="Botica">Botica</option>
+              <option value="Clínica o centro de salud">Clínica o centro de salud</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <!-- honeypot anti-bots: los humanos no lo ven ni lo llenan -->
+          <input type="text" name="website" class="lead-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button type="submit" class="canal-cta lead-submit">
+            Enviar
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+          <p class="lead-status" aria-live="polite"></p>
+        </form>
+      </article>
+
     </div>
   </div>
 </section>
