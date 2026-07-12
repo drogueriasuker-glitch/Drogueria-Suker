@@ -2593,6 +2593,9 @@ body.theme-dark { background: var(--ink); color: #E8ECF4; }
   box-shadow: 0 0 0 3px rgba(229,184,38,.18);
 }
 
+/* Televentas: reparte los puntos de la lista a lo alto para equilibrar con la tarjeta del formulario */
+.canales-grid > .canal-card:first-child .canal-list { flex: 1; justify-content: space-evenly; }
+
 /* — CTA — */
 .canal-cta {
   position: relative; z-index: 1;
