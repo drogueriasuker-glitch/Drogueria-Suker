@@ -627,6 +627,15 @@
     // preload ligero para que la descarga avance solo mientras reproduce
     var isTouch = matchMedia("(hover: none) and (pointer: coarse)").matches;
 
+    // En táctiles se sirve la versión ligera (540p, ~4.6 MB vs 8.8 MB)
+    if (isTouch) {
+      var srcEl = video.querySelector("source");
+      if (srcEl && srcEl.getAttribute("src").indexOf("suker.mp4") !== -1) {
+        srcEl.setAttribute("src", srcEl.getAttribute("src").replace("suker.mp4", "suker-movil.mp4"));
+        video.load();
+      }
+    }
+
     // El indicador de pausa sigue el estado REAL del video
     if (panel) {
       video.addEventListener("pause", function () { panel.classList.add("is-paused"); });
