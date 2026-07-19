@@ -614,14 +614,18 @@
     var pausedByUser = false;
     var soundOn = false;
 
-    // Celular / táctil: sin video — solo se muestra la portada (póster)
-    var posterOnly = matchMedia("(hover: none) and (pointer: coarse)").matches;
-    if (posterOnly) {
+    // Ahorro de datos activado por el usuario: solo la portada (póster)
+    var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (conn && conn.saveData) {
       if (panel) panel.classList.add("poster-only");
       video.preload = "none";
       video.pause();
       return;
     }
+
+    // Celular / táctil: el video SÍ se reproduce (mudo + playsinline);
+    // preload ligero para que la descarga avance solo mientras reproduce
+    var isTouch = matchMedia("(hover: none) and (pointer: coarse)").matches;
 
     // El indicador de pausa sigue el estado REAL del video
     if (panel) {
@@ -632,7 +636,7 @@
     // Reproducir SIEMPRE de forma automática (mudo → permitido por el navegador),
     // incluso con "reducir movimiento" activo: es un pedido explícito.
     video.muted = true;
-    video.preload = "auto";
+    video.preload = isTouch ? "metadata" : "auto";
     function tryPlay() {
       var pr = video.play();
       if (pr && typeof pr.catch === "function") { pr.catch(function () {}); }
