@@ -406,10 +406,15 @@
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var nombre  = (nombreEl  ? nombreEl.value  : "").trim();
-      var celular = (celularEl ? celularEl.value : "").replace(/\D/g, "");
+      var nombre  = (nombreEl  ? nombreEl.value  : "").trim().slice(0, 80);
+      var celular = (celularEl ? celularEl.value : "").replace(/\D/g, "").slice(0, 9);
       var tipo    = tipoEl ? tipoEl.value : "";
       var hp      = (form.elements.website ? form.elements.website.value : "");
+
+      // Lista blanca: el tipo solo puede ser una de las opciones del select
+      if (["Farmacia", "Botica", "Clínica o centro de salud", "Otro"].indexOf(tipo) === -1) {
+        tipo = "Otro";
+      }
 
       if (!nombre) { marcar(nombreEl); return; }
       if (!/^9\d{8}$/.test(celular)) {
