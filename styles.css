@@ -671,6 +671,11 @@ p  { line-height: 1.7; }
 .hero-3d.poster-only .hero-video-controls,
 .hero-3d.poster-only .hero-video-state { display: none; }
 
+/* Modo YouTube (celular): el iframe llena el panel; controles propios ocultos */
+.hero-3d.is-youtube .hero-video-controls,
+.hero-3d.is-youtube .hero-video-state { display: none; }
+.hero-video-yt-embed { border: 0; cursor: default; }
+
 /* ── Indicador de pausa centrado (clic atraviesa hacia el video) ── */
 .hero-video-state {
   position: absolute;

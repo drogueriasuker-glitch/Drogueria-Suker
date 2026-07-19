@@ -614,26 +614,31 @@
     var pausedByUser = false;
     var soundOn = false;
 
-    // Ahorro de datos activado por el usuario: solo la portada (póster)
+    // Celular / táctil: video incrustado desde YouTube (streaming adaptativo →
+    // arranca al instante sin descargar el MP4). PC/laptop mantiene el MP4 propio.
+    var isTouch = matchMedia("(hover: none) and (pointer: coarse)").matches;
+    if (isTouch) {
+      var YT_ID = "rAhQABSIJ5g";
+      var yt = document.createElement("iframe");
+      yt.className = "hero-video-el hero-video-yt-embed";
+      yt.src = "https://www.youtube-nocookie.com/embed/" + YT_ID +
+               "?autoplay=1&mute=1&playsinline=1&loop=1&playlist=" + YT_ID + "&rel=0";
+      yt.title = "Video de presentación de Droguería Suker";
+      yt.setAttribute("frameborder", "0");
+      yt.setAttribute("allow", "autoplay; encrypted-media; picture-in-picture; fullscreen");
+      yt.setAttribute("allowfullscreen", "");
+      video.parentNode.replaceChild(yt, video);
+      if (panel) panel.classList.add("is-youtube");
+      return;
+    }
+
+    // Ahorro de datos activado por el usuario (PC): solo la portada (póster)
     var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     if (conn && conn.saveData) {
       if (panel) panel.classList.add("poster-only");
       video.preload = "none";
       video.pause();
       return;
-    }
-
-    // Celular / táctil: el video SÍ se reproduce (mudo + playsinline);
-    // preload ligero para que la descarga avance solo mientras reproduce
-    var isTouch = matchMedia("(hover: none) and (pointer: coarse)").matches;
-
-    // En táctiles se sirve la versión ligera (540p, ~4.6 MB vs 8.8 MB)
-    if (isTouch) {
-      var srcEl = video.querySelector("source");
-      if (srcEl && srcEl.getAttribute("src").indexOf("suker.mp4") !== -1) {
-        srcEl.setAttribute("src", srcEl.getAttribute("src").replace("suker.mp4", "suker-movil.mp4"));
-        video.load();
-      }
     }
 
     // El indicador de pausa sigue el estado REAL del video
@@ -645,7 +650,7 @@
     // Reproducir SIEMPRE de forma automática (mudo → permitido por el navegador),
     // incluso con "reducir movimiento" activo: es un pedido explícito.
     video.muted = true;
-    video.preload = isTouch ? "metadata" : "auto";
+    video.preload = "auto";
     function tryPlay() {
       var pr = video.play();
       if (pr && typeof pr.catch === "function") { pr.catch(function () {}); }
