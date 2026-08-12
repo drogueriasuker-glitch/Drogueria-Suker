@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es-PE">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alta de usuarios · Academia Suker (uso interno)</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#02164A">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/academia/academia.css?v=20260811a">
+
+  <style>
+    .t-caja {
+      width: 100%;
+      max-width: 640px;
+      margin: 3.5rem auto;
+      padding: clamp(1.5rem, 4vw, 2.4rem);
+      border-radius: var(--r-xl);
+      border: 1px solid var(--line);
+      background: linear-gradient(155deg, rgba(255,255,255,.075) 0%, rgba(255,255,255,.025) 100%);
+      box-shadow: 0 30px 80px rgba(0,0,0,.45);
+    }
+    .t-caja h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.6rem; font-weight: 800; letter-spacing: -.025em;
+      margin-bottom: .4rem;
+    }
+    .t-caja > p.lead { color: var(--mist); font-size: .9rem; margin-bottom: 1.6rem; line-height: 1.65; }
+    .t-fila { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; }
+    @media (max-width: 560px) { .t-fila { grid-template-columns: 1fr; } }
+    .t-caja select {
+      width: 100%; padding: .84rem .9rem;
+      background: rgba(0,0,0,.26); color: #fff;
+      border: 1px solid var(--line); border-radius: var(--r-md);
+      font: inherit; font-size: .95rem;
+    }
+    .t-caja select option { background: #0B1F45; color: #fff; }
+    .t-dado {
+      display: grid; place-items: center;
+      width: 40px; height: 40px; margin-right: .3rem;
+      border-radius: var(--r-sm); color: var(--mist-dim);
+      transition: color .18s, background .18s;
+    }
+    .t-dado:hover { color: var(--gold); background: rgba(255,255,255,.06); }
+    .t-dado svg { width: 17px; height: 17px; }
+    #tSalida { margin-top: 1.7rem; padding-top: 1.4rem; border-top: 1px solid var(--line-soft); }
+    #tResumen {
+      padding: .8rem .95rem; margin-bottom: .9rem;
+      border-radius: var(--r-sm);
+      background: rgba(255,196,1,.12); border: 1px solid rgba(255,196,1,.3);
+      color: var(--gold-pale); font-size: .86rem; font-weight: 600;
+      word-break: break-word;
+    }
+    #tBloque {
+      display: block; white-space: pre; overflow-x: auto;
+      padding: 1rem; border-radius: var(--r-sm);
+      background: rgba(0,0,0,.42); border: 1px solid var(--line);
+      color: #CFE3FF; font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+      font-size: .78rem; line-height: 1.65;
+    }
+    .t-nota {
+      margin-top: 1.3rem; padding: .85rem 1rem;
+      border-radius: var(--r-sm);
+      border: 1px solid var(--line-soft); background: rgba(0,0,0,.2);
+      font-size: .8rem; color: var(--mist-dim); line-height: 1.6;
+    }
+    .t-nota b { color: var(--white); }
+  </style>
+
+  <script src="../assets/academia/academia-usuarios.js?v=20260811a"></script>
+  <script src="../assets/academia/academia-nucleo.js?v=20260811a"></script>
+  <script src="academia-alta-usuario.js?v=20260811a" defer></script>
+</head>
+<body>
+
+<div class="contenedor">
+  <section class="t-caja">
+    <h1>Alta de usuarios</h1>
+    <p class="lead">
+      Herramienta interna de Droguería Suker. Crea la ficha de acceso de un boticario
+      y pégala en <code>assets/academia/academia-usuarios.js</code>.
+      La contraseña no se guarda ni se envía a ningún lado: se calcula su huella aquí mismo.
+    </p>
+
+    <div class="t-fila">
+      <div class="ac-campo">
+        <label for="tUsuario">Usuario</label>
+        <div class="ac-campo-caja">
+          <input id="tUsuario" type="text" placeholder="botica.sanmartin" spellcheck="false" autocapitalize="none">
+        </div>
+      </div>
+      <div class="ac-campo">
+        <label for="tClave">Contraseña</label>
+        <div class="ac-campo-caja">
+          <input id="tClave" type="text" placeholder="escríbela o genérala" spellcheck="false" autocapitalize="none">
+          <button class="t-dado" id="tDado" type="button" aria-label="Sugerir una contraseña">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8.5 8.5h.01M15.5 8.5h.01M8.5 15.5h.01M15.5 15.5h.01M12 12h.01"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="t-fila">
+      <div class="ac-campo">
+        <label for="tNombre">Nombre del boticario</label>
+        <div class="ac-campo-caja"><input id="tNombre" type="text" placeholder="Sra. Rosa Mamani"></div>
+      </div>
+      <div class="ac-campo">
+        <label for="tBotica">Botica</label>
+        <div class="ac-campo-caja"><input id="tBotica" type="text" placeholder="Botica San Martín"></div>
+      </div>
+    </div>
+
+    <div class="t-fila">
+      <div class="ac-campo">
+        <label for="tCiudad">Ciudad o plaza</label>
+        <div class="ac-campo-caja"><input id="tCiudad" type="text" placeholder="Juliaca"></div>
+      </div>
+      <div class="ac-campo">
+        <label for="tExpira">Vence el (opcional)</label>
+        <div class="ac-campo-caja"><input id="tExpira" type="date"></div>
+      </div>
+    </div>
+
+    <div class="ac-campo">
+      <label for="tRol">Rol</label>
+      <select id="tRol">
+        <option value="boticario">Boticario (cliente)</option>
+        <option value="admin">Administrador (equipo Suker)</option>
+      </select>
+    </div>
+
+    <button class="ac-btn ac-btn-oro" id="tGenerar" type="button">Generar ficha</button>
+
+    <div id="tSalida" hidden>
+      <p id="tResumen"></p>
+      <code id="tBloque"></code>
+      <button class="ac-btn ac-btn-fantasma" id="tCopiar" type="button" style="margin-top:.9rem">Copiar ficha</button>
+      <div class="t-nota">
+        <b>Cómo usarla:</b> abre <code>assets/academia/academia-usuarios.js</code>, pega la ficha
+        dentro de <code>cuentas: [ … ]</code> y sube el archivo. Entrega al boticario solo el usuario
+        y la contraseña de la línea amarilla — esa contraseña <b>no se puede recuperar después</b>,
+        si se pierde hay que generar una nueva.
+      </div>
+    </div>
+  </section>
+</div>
+
+</body>
+</html>

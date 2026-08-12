@@ -4,6 +4,10 @@
 User-agent: *
 Allow: /
 
+# Área privada de la Academia Suker y herramientas internas
+Disallow: /academiasuker/
+Disallow: /tools/
+
 # Bots de IA / rastreadores que respetan robots (permitidos)
 User-agent: Googlebot
 Allow: /

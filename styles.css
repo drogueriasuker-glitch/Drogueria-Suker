@@ -475,6 +475,67 @@ p  { line-height: 1.7; }
 }
 .nav-wa-btn svg { width: 17px; height: 17px; }
 
+/* ── Botón ACADEMIA SUKER (acceso al área de formación) ── */
+.nav-academia-btn {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .58rem 1.15rem;
+  border-radius: var(--r-pill);
+  background: linear-gradient(120deg, var(--gold-light) 0%, var(--gold) 52%, var(--gold-dark) 100%);
+  color: var(--navy-dark);
+  font-size: .85rem;
+  font-weight: 700;
+  letter-spacing: .002em;
+  white-space: nowrap;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: 0 6px 22px rgba(229,184,38,.34), inset 0 1px 0 rgba(255,255,255,.5);
+  transition: transform var(--t-base), box-shadow var(--t-base), filter var(--t-base);
+}
+.nav-academia-btn svg { width: 17px; height: 17px; flex-shrink: 0; }
+.nav-academia-btn:hover {
+  transform: translateY(-2px);
+  filter: saturate(1.08);
+  box-shadow: 0 12px 32px rgba(229,184,38,.5), inset 0 1px 0 rgba(255,255,255,.6);
+}
+.nav-academia-btn:active { transform: translateY(0); }
+
+/* Destello que recorre el botón: lo hace notar sin ser molesto */
+.nav-academia-btn::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: -60%;
+  width: 45%;
+  z-index: -1;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.65), transparent);
+  transform: skewX(-18deg);
+  animation: navAcademiaBrillo 5.5s var(--ease-smooth) infinite;
+}
+@keyframes navAcademiaBrillo {
+  0%, 62%  { left: -60%; }
+  86%, 100% { left: 125%; }
+}
+
+/* Halo suave que respira mientras el header está sobre el hero */
+.header:not(.is-scrolled) .nav-academia-btn {
+  box-shadow: 0 6px 22px rgba(229,184,38,.42), 0 0 0 0 rgba(229,184,38,.5), inset 0 1px 0 rgba(255,255,255,.5);
+  animation: navAcademiaLatido 3.4s var(--ease-smooth) infinite;
+}
+@keyframes navAcademiaLatido {
+  0%   { box-shadow: 0 6px 22px rgba(229,184,38,.42), 0 0 0 0   rgba(229,184,38,.45), inset 0 1px 0 rgba(255,255,255,.5); }
+  70%  { box-shadow: 0 6px 22px rgba(229,184,38,.42), 0 0 0 13px rgba(229,184,38,0),   inset 0 1px 0 rgba(255,255,255,.5); }
+  100% { box-shadow: 0 6px 22px rgba(229,184,38,.42), 0 0 0 0   rgba(229,184,38,0),    inset 0 1px 0 rgba(255,255,255,.5); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-academia-btn::after { animation: none; display: none; }
+  .header:not(.is-scrolled) .nav-academia-btn { animation: none; }
+}
+
 .hamburger {
   display: none;
   flex-direction: column;
@@ -527,6 +588,13 @@ p  { line-height: 1.7; }
   font-size: 1rem;
   padding: .8rem 2rem;
 }
+.nav-overlay .nav-academia-btn {
+  margin-top: 1.75rem;
+  font-size: 1.02rem;
+  padding: .9rem 2.1rem;
+}
+.nav-overlay .nav-academia-btn svg { width: 19px; height: 19px; }
+.nav-overlay .nav-wa-btn { margin-top: .75rem; }
 
 /* 7. HERO */
 .hero {
@@ -1565,7 +1633,9 @@ a.hero-video-btn { text-decoration: none; }
   :root { --sect-py: 4.5rem; }
   .nav { display: none; }
   .nav-wa-btn { display: none; }
-  .hamburger { display: flex; }
+  /* El botón de la Academia sí se queda: es la puerta de entrada */
+  .nav-academia-btn { margin-left: auto; }
+  .hamburger { display: flex; margin-left: 0; }
   .cat-grid { grid-template-columns: repeat(2, 1fr); }
   .nosotros-grid { grid-template-columns: 1fr; }
   .nosotros-visual { max-width: 340px; }
@@ -2997,6 +3067,24 @@ body.theme-dark { background: var(--ink); color: #E8ECF4; }
   .logo-img { width: 44px; height: 44px; outline-offset: 1px; }
   .logo-text { font-size: 1.42rem; letter-spacing: -.01em; }
 
+  /* — Botón Academia compacto en pantallas chicas — */
+  .nav-academia-btn { padding: .5rem .85rem; font-size: .78rem; gap: .4rem; }
+  .nav-academia-btn svg { width: 15px; height: 15px; }
+}
+
+/* Teléfonos angostos (≤ 560 px): el header debe entrar completo
+   con logo + botón Academia + hamburguesa, sin desbordar. */
+@media (max-width: 560px) {
+  .nav-academia-btn { padding: .46rem .72rem; font-size: .72rem; gap: .34rem; }
+  .nav-academia-btn svg { width: 14px; height: 14px; }
+  .nav-overlay .nav-academia-extra { display: inline; }
+}
+@media (max-width: 470px) {
+  .header .nav-academia-extra { display: none; }   /* queda solo "Academia" */
+}
+@media (max-width: 767px) {
+  /* continúa el bloque móvil original */
+
   /* — Menú móvil más espaciado y elegante — */
   .nav-overlay { gap: .35rem; }
   .nav-overlay .nav-link { font-size: 1.55rem; font-weight: 700; letter-spacing: -.01em; }
@@ -3094,3 +3182,60 @@ body.theme-dark { background: var(--ink); color: #E8ECF4; }
   }
   .reveal.is-visible { filter: none; }
 }
+
+
+/* ============================================================
+   HEADER CON BOTÓN "ACADEMIA SUKER" — ajuste de anchos
+   Va al final del archivo para tener la última palabra sobre
+   los bloques móviles anteriores. Verificado sin desbordes
+   horizontales de 320 px a 1920 px.
+   ============================================================ */
+
+/* — Laptops y tablets grandes: el menú pasa a hamburguesa antes,
+     porque ahora conviven logo + menú + Academia + WhatsApp — */
+@media (max-width: 1150px) {
+  .nav { display: none; }
+  .nav-wa-btn { display: none; }
+  .nav-academia-btn { margin-left: auto; }
+  .hamburger { display: flex; margin-left: 0; }
+}
+
+/* — Franja 1151–1400 px: caben todos, pero apretados — */
+@media (min-width: 1151px) and (max-width: 1400px) {
+  .header .container { gap: .9rem; }
+  .logo { gap: .55rem; }
+  .logo-img { width: 54px; height: 54px; }
+  .logo-text { font-size: 1.55rem; }
+  .nav-list { gap: .1rem; }
+  .nav-link { padding: .45rem .62rem; font-size: .84rem; }
+  .nav-wa-btn { padding: .5rem .9rem; font-size: .8rem; }
+  .nav-academia-btn { padding: .52rem .92rem; font-size: .8rem; }
+  .nav-academia-btn svg { width: 15px; height: 15px; }
+}
+
+/* — Teléfonos (≤ 560 px): logo compacto que puede partirse en dos
+     líneas y botón corto, para que entre todo sin recortes — */
+@media (max-width: 560px) {
+  .header .container { gap: .6rem; padding-inline: .85rem; }
+  .logo { gap: .45rem; min-width: 0; flex-shrink: 1; }
+  .logo-img { width: 38px; height: 38px; flex-shrink: 0; }
+  .logo-text { font-size: 1.12rem; line-height: 1.08; letter-spacing: 0; }
+  .header .nav-academia-extra { display: none; }   /* queda solo "Academia" */
+  .nav-academia-btn { padding: .46rem .72rem; font-size: .74rem; gap: .35rem; flex-shrink: 0; }
+  .nav-academia-btn svg { width: 14px; height: 14px; }
+  .hamburger { flex-shrink: 0; }
+}
+
+/* — Teléfonos angostos (≤ 400 px) — */
+@media (max-width: 400px) {
+  .header .container { gap: .5rem; padding-inline: .7rem; }
+  .logo { gap: .38rem; }
+  .logo-img { width: 34px; height: 34px; }
+  .logo-text { font-size: .95rem; }
+  .nav-academia-btn { padding: .42rem .58rem; font-size: .66rem; }
+  .nav-academia-btn svg { width: 13px; height: 13px; }
+  .hamburger { width: 34px; height: 34px; padding: 7px; }
+}
+
+/* En el menú desplegable siempre se lee el nombre completo */
+.nav-overlay .nav-academia-extra { display: inline !important; }

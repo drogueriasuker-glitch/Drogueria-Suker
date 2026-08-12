@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es-PE">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Academia Suker | Formación para boticarios · Droguería Suker</title>
+  <meta name="description" content="Área privada de formación de Droguería Suker para boticas aliadas de Juliaca y el sur andino.">
+  <!-- Área privada: no debe aparecer en buscadores -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#02164A">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="../assets/img/logo.png">
+  <link rel="canonical" href="https://drogueriasuker.com/academiasuker/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/academia/academia.css?v=20260811a">
+
+  <!-- Las salas quedan listas en caché antes de que el usuario haga clic -->
+  <link rel="prefetch" href="formales/">
+  <link rel="prefetch" href="informales/">
+  <link rel="prefetch" href="../assets/academia/academia-datos.js?v=20260811a">
+  <link rel="prefetch" href="../assets/academia/academia-sala.js?v=20260811a">
+
+  <!-- Sin "defer": deciden antes del primer pintado si se muestra
+       la Academia o el formulario, para que nada parpadee. -->
+  <script src="../assets/academia/academia-usuarios.js?v=20260811a"></script>
+  <script src="../assets/academia/academia-nucleo.js?v=20260811a"></script>
+</head>
+<body>
+
+<noscript>
+  <div style="max-width:640px;margin:16vh auto;padding:2rem;text-align:center;font-family:sans-serif;color:#fff">
+    <h1 style="font-size:1.4rem;margin-bottom:.8rem">Academia Suker</h1>
+    <p>Para entrar a la Academia necesitas activar JavaScript en tu navegador.
+       Si tienes dudas escríbenos al <strong>+51 932 667 799</strong>.</p>
+  </div>
+</noscript>
+
+<!-- ══════════════════ PORTADA: ACCESO ══════════════════ -->
+<div class="ac-portada" id="acPortada">
+  <section class="ac-login" aria-labelledby="acLoginTitulo">
+    <img class="ac-login-logo" src="../assets/img/logo.png" alt="Logo de Droguería Suker" width="86" height="86">
+
+    <h1 id="acLoginTitulo">Academia <em>Suker</em></h1>
+    <p class="ac-login-lead">
+      Área privada de formación para boticas aliadas. Ingresa con el usuario
+      y la contraseña que te entregó tu asesor Suker.
+    </p>
+
+    <div class="ac-aviso" id="acAviso" role="alert"></div>
+
+    <form id="acFormulario" novalidate>
+      <div class="ac-campo">
+        <label for="acUsuario">Usuario</label>
+        <div class="ac-campo-caja">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>
+          </svg>
+          <input id="acUsuario" name="usuario" type="text" autocomplete="username"
+                 placeholder="botica.demo" spellcheck="false" autocapitalize="none" required>
+        </div>
+      </div>
+
+      <div class="ac-campo">
+        <label for="acClave">Contraseña</label>
+        <div class="ac-campo-caja">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+          </svg>
+          <input id="acClave" name="clave" type="password" autocomplete="current-password"
+                 placeholder="••••••••••" required>
+          <button class="ac-ojo" id="acOjo" type="button" aria-label="Mostrar contraseña" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <label class="ac-recordar" for="acRecordar">
+        <input type="checkbox" id="acRecordar">
+        <span class="ac-check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+        </span>
+        Mantener la sesión iniciada en este equipo
+      </label>
+
+      <button class="ac-btn ac-btn-oro" id="acEntrar" type="submit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/>
+        </svg>
+        Entrar a la Academia
+      </button>
+    </form>
+
+    <p class="ac-login-pie">
+      ¿Todavía no tienes tu acceso? Es gratuito para boticas aliadas —
+      <a href="https://wa.me/51932667799?text=Hola%20Suker%2C%20quiero%20mi%20acceso%20a%20la%20Academia%20Suker" target="_blank" rel="noopener">pídelo por WhatsApp</a>.<br>
+      <a href="../">Volver a drogueriasuker.com</a>
+    </p>
+  </section>
+</div>
+
+<!-- ══════════════════ ACADEMIA ══════════════════ -->
+<div class="ac-app">
+
+  <header class="ac-top">
+    <div class="contenedor">
+      <a class="ac-marca" href="../" aria-label="Volver a Droguería Suker">
+        <img src="../assets/img/logo.png" alt="" width="40" height="40">
+        <span class="ac-marca-txt">
+          <b>Academia Suker</b>
+          <span>Formación para boticarios</span>
+        </span>
+      </a>
+
+      <nav class="ac-top-nav" aria-label="Secciones de la Academia">
+        <a class="ac-top-link is-activo" href="./">Inicio</a>
+        <a class="ac-top-link" href="formales/" data-transicion>Formales</a>
+        <a class="ac-top-link" href="informales/" data-transicion>Informales</a>
+        <a class="ac-top-link" href="../" data-secundario>Sitio principal</a>
+      </nav>
+
+      <div class="ac-usuario">
+        <span class="ac-usuario-nom" id="acNombre">Boticario</span>
+        <button class="ac-salir" id="acSalir" type="button" data-destino="./" aria-label="Cerrar sesión" title="Cerrar sesión">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="ac-hero">
+      <div class="contenedor">
+        <span class="ac-cinta">Academia Suker · Acceso de boticas aliadas</span>
+        <h1 class="ac-titulo">Formación que se <em>nota en la caja</em></h1>
+        <p class="ac-bajada">
+          Un espacio hecho para el boticario independiente del sur andino: módulos cortos,
+          en criollo y aplicables el mismo día, dictados por nuestro Químico Farmacéutico.
+          <strong>Elige por dónde quieres empezar.</strong>
+        </p>
+      </div>
+    </section>
+
+    <section class="ac-seccion">
+      <div class="contenedor">
+        <div class="ac-seccion-tit">
+          <h2>Las dos salas</h2>
+          <p>Puedes recorrerlas en el orden que prefieras.</p>
+        </div>
+
+        <div class="ac-puertas">
+
+          <!-- ── Puerta 1 ── -->
+          <article class="ac-puerta ac-puerta--formal">
+            <span class="ac-puerta-num" aria-hidden="true">01</span>
+            <span class="ac-puerta-icono">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/>
+              </svg>
+            </span>
+            <span class="ac-puerta-eyebrow">Sala 01</span>
+            <h2>Formales</h2>
+            <p>
+              Todo lo que tu botica ya está ganando por tener los papeles en regla:
+              respaldo sanitario, trazabilidad, línea de crédito, crédito fiscal y
+              la confianza del barrio que ningún descuento compra.
+            </p>
+            <div class="ac-puerta-datos">
+              <span class="ac-chip">7 beneficios</span>
+              <span class="ac-chip">6 módulos en video</span>
+              <span class="ac-chip">≈ 1 h 35 min</span>
+            </div>
+            <span class="ac-puerta-cta">
+              Entrar a la sala
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>
+              </svg>
+            </span>
+            <a class="ac-puerta-enlace" href="formales/" data-transicion aria-label="Entrar a la sala Formales"></a>
+          </article>
+
+          <!-- ── Puerta 2 ── -->
+          <article class="ac-puerta ac-puerta--informal">
+            <span class="ac-puerta-num" aria-hidden="true">02</span>
+            <span class="ac-puerta-icono">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M10.3 4.3 2.6 17.5A2 2 0 0 0 4.3 20.5h15.4a2 2 0 0 0 1.7-3L13.7 4.3a2 2 0 0 0-3.4 0z"/><path d="M12 9.5v4M12 17h.01"/>
+              </svg>
+            </span>
+            <span class="ac-puerta-eyebrow">Sala 02</span>
+            <h2>Informales</h2>
+            <p>
+              La cuenta completa del canal informal: lo que no aparece en la boleta
+              pero se paga igual — riesgo sanitario, multas, capital congelado y un
+              negocio con techo. Y el puente concreto para salir de ahí.
+            </p>
+            <div class="ac-puerta-datos">
+              <span class="ac-chip">7 riesgos</span>
+              <span class="ac-chip">6 módulos en video</span>
+              <span class="ac-chip">≈ 1 h 34 min</span>
+            </div>
+            <span class="ac-puerta-cta">
+              Entrar a la sala
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>
+              </svg>
+            </span>
+            <a class="ac-puerta-enlace" href="informales/" data-transicion aria-label="Entrar a la sala Informales"></a>
+          </article>
+
+        </div>
+
+        <section class="ac-cierre">
+          <h2>Tu acceso es personal</h2>
+          <p>
+            El usuario que tienes es solo para tu botica y no caduca mientras seas
+            cliente activo. Si necesitas un acceso más para tu personal, o si olvidaste
+            tu contraseña, tu asesor te la repone el mismo día.
+          </p>
+          <div class="ac-cierre-botones">
+            <a class="ac-btn ac-btn-wa" href="https://wa.me/51932667799?text=Hola%20Suker%2C%20tengo%20una%20consulta%20sobre%20mi%20acceso%20a%20la%20Academia" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M17.5 14.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.4-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.7.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.42-.08-.12-.28-.2-.57-.34M12.05 21.8h-.01a9.9 9.9 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.89 9.89-9.89a9.83 9.83 0 0 1 9.88 9.9c0 5.45-4.43 9.88-9.88 9.88m8.41-18.3A11.8 11.8 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.9c0 2.09.55 4.14 1.59 5.94L.06 24l6.3-1.65a11.9 11.9 0 0 0 5.69 1.45h.01c6.55 0 11.89-5.34 11.89-11.9 0-3.17-1.24-6.16-3.48-8.4z"/>
+              </svg>
+              Escribir a mi asesor
+            </a>
+            <a class="ac-btn ac-btn-fantasma" href="../">
+              Volver al sitio principal
+            </a>
+          </div>
+        </section>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="ac-pie">
+    <div class="contenedor">
+      <p class="ac-pie-txt">
+        © <span>2026</span> Droguería Suker · Sucari Corp S.A.C. · Juliaca, Puno<br>
+        Contenido de uso interno para boticas aliadas. No lo compartas fuera de tu establecimiento.
+      </p>
+      <nav class="ac-pie-nav" aria-label="Enlaces de la Academia">
+        <a href="formales/" data-transicion>Formales</a>
+        <a href="informales/" data-transicion>Informales</a>
+        <a href="../">Droguería Suker</a>
+        <a href="https://wa.me/51932667799" target="_blank" rel="noopener">WhatsApp</a>
+      </nav>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>
