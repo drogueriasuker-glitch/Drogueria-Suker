@@ -121,6 +121,8 @@
     return true;
   }
 
+  /* Acepta tanto una ficha del archivo local como una respuesta
+     del Excel: ambas traen usuario, nombre, botica y rol. */
   function guardarSesion(cuenta, recordar) {
     var horas = recordar
       ? (PAD.duracionRecordarDias || 30) * 24
@@ -148,7 +150,11 @@
     if (!txt) { return null; }
     try { dato = JSON.parse(txt); } catch (e) { return null; }
     if (!dato || !dato.u || !dato.exp || Date.now() > dato.exp) { borrarSesion(); return null; }
-    if (!cuentaVigente(buscarCuenta(dato.u))) { borrarSesion(); return null; }
+    /* Las cuentas del archivo local se revalidan aquí. Las que vienen
+       del Excel no están en el archivo: su vigencia la comprobó Google
+       al entrar, y se vuelve a comprobar cuando la sesión caduque. */
+    var local = buscarCuenta(dato.u);
+    if (local && !cuentaVigente(local)) { borrarSesion(); return null; }
     return dato;
   }
 
@@ -161,6 +167,40 @@
 
   /* ── Decisión antes del primer pintado ── */
   RAIZ.classList.add(sesionActual ? "ac-abierto" : "ac-cerrado", "ac-listo");
+
+  /* ══════════════════════════════════════════════════════════
+     2 bis. EXCEL DE ACCESOS (hoja de cálculo de Google)
+     Si hay una dirección configurada en academia-config.js, la
+     contraseña se comprueba en el servidor de Google y NUNCA
+     viaja al navegador. Si Google no responde, se recurre al
+     padrón local para que nadie se quede afuera.
+     ══════════════════════════════════════════════════════════ */
+  var CONF = win.ACADEMIA_CONFIG || {};
+
+  function hayHoja() {
+    return !!(CONF.endpoint && /^https:\/\/script\.google\.com\//.test(CONF.endpoint));
+  }
+
+  /* Promesa con la respuesta de la hoja, o null si no se pudo
+     consultar (sin conexión, permisos, tiempo agotado). */
+  function preguntarHoja(usuario, clave) {
+    if (!hayHoja() || !win.fetch || !win.Promise) { return null; }
+
+    var datos = new win.URLSearchParams();
+    datos.append("accion", "entrar");
+    datos.append("usuario", usuario);
+    datos.append("clave", clave);
+
+    var aTiempo = new win.Promise(function (resolver) {
+      win.setTimeout(function () { resolver(null); }, (CONF.esperaMaxima || 12) * 1000);
+    });
+
+    var consulta = win.fetch(CONF.endpoint, { method: "POST", body: datos })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; });
+
+    return win.Promise.race([consulta, aTiempo]);
+  }
 
   /* ══════════════════════════════════════════════════════════
      3. PANTALLA "PROCESANDO DATOS"
@@ -326,39 +366,70 @@
       elBoton.disabled = true;
       elBoton.innerHTML = '<span class="ac-hilo" aria-hidden="true"></span> Verificando…';
 
-      /* El cálculo de la huella bloquea unos milisegundos: lo
-         aplazamos un tick para que el botón alcance a repintarse. */
-      win.setTimeout(function () {
-        var cuenta = buscarCuenta(usuario);
-        var valida = false;
+      function rechazar(mensaje) {
+        elBoton.disabled = false;
+        elBoton.innerHTML = textoOriginal;
+        elClave.value = "";
+        avisar(elAviso, "error", mensaje);
+        elClave.focus();
+      }
 
-        if (cuenta) {
-          try {
-            valida = derivar(cuenta.usuario, clave, cuenta.sal, PAD.vueltas) === cuenta.hash;
-          } catch (e) { valida = false; }
-        }
-
-        if (!valida || !cuentaVigente(cuenta)) {
-          elBoton.disabled = false;
-          elBoton.innerHTML = textoOriginal;
-          elClave.value = "";
-          if (cuenta && valida && !cuentaVigente(cuenta)) {
-            avisar(elAviso, "error", "Tu acceso está suspendido o venció. Escríbenos por WhatsApp y lo reactivamos.");
-          } else {
-            avisar(elAviso, "error", "Usuario o contraseña incorrectos. Revisa que no haya espacios de más.");
-          }
-          elClave.focus();
-          return;
-        }
-
+      function aceptar(cuenta) {
         guardarSesion(cuenta, !!(elRecord && elRecord.checked));
-
         Cargador.correr(PASOS_ENTRADA, function () {
           var ir = destinoPedido();
           if (ir) { win.location.replace(ir); return; }
           win.location.reload();
         });
-      }, 60);
+      }
+
+      /* Comprobación contra el padrón local del sitio */
+      function probarLocal() {
+        var cuenta = buscarCuenta(usuario);
+        var valida = false;
+        if (cuenta) {
+          try {
+            valida = derivar(cuenta.usuario, clave, cuenta.sal, PAD.vueltas) === cuenta.hash;
+          } catch (e) { valida = false; }
+        }
+        if (valida && !cuentaVigente(cuenta)) {
+          rechazar("Tu acceso está suspendido o venció. Escríbenos por WhatsApp y lo reactivamos.");
+          return;
+        }
+        if (!valida) {
+          rechazar("Usuario o contraseña incorrectos. Revisa que no haya espacios de más.");
+          return;
+        }
+        aceptar(cuenta);
+      }
+
+      /* Primero el Excel de accesos; si no contesta, el padrón local */
+      var consulta = preguntarHoja(usuario, clave);
+      if (consulta) {
+        consulta.then(function (r) {
+          if (r && r.ok) {
+            aceptar({ usuario: r.usuario, nombre: r.nombre, botica: r.botica, rol: r.rol });
+            return;
+          }
+          if (r && r.error === "suspendida") {
+            rechazar("Tu acceso está suspendido o venció. Escríbenos por WhatsApp y lo reactivamos.");
+            return;
+          }
+          if (r && r.error === "demasiados_intentos") {
+            rechazar("Demasiados intentos seguidos. Espera unos minutos o escríbenos por WhatsApp.");
+            return;
+          }
+          /* r === null  → Google no contestó: seguimos con el padrón local.
+             r.error === "credenciales" → no está en la hoja, pero puede ser
+             una cuenta antigua del archivo: se prueba igual. */
+          win.setTimeout(probarLocal, 20);
+        });
+        return;
+      }
+
+      /* El cálculo de la huella bloquea unos milisegundos: lo
+         aplazamos un tick para que el botón alcance a repintarse. */
+      win.setTimeout(probarLocal, 60);
     });
 
     /* Foco cómodo al abrir */

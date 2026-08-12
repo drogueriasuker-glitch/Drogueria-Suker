@@ -16,16 +16,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://i.ytimg.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../assets/academia/academia.css?v=20260811a">
+  <link rel="stylesheet" href="../../assets/academia/academia.css?v=20260812a">
 
   <link rel="prefetch" href="../formales/">
 
   <!-- Sin "defer": la puerta se decide antes del primer pintado -->
-  <script src="../../assets/academia/academia-usuarios.js?v=20260811a"></script>
-  <script src="../../assets/academia/academia-nucleo.js?v=20260811a"></script>
+  <script src="../../assets/academia/academia-config.js?v=20260812a"></script>
+  <script src="../../assets/academia/academia-usuarios.js?v=20260812a"></script>
+  <script src="../../assets/academia/academia-nucleo.js?v=20260812a"></script>
   <!-- El contenido sí puede esperar al DOM -->
-  <script src="../../assets/academia/academia-datos.js?v=20260811a" defer></script>
-  <script src="../../assets/academia/academia-sala.js?v=20260811a" defer></script>
+  <script src="../../assets/academia/academia-datos.js?v=20260812a" defer></script>
+  <script src="../../assets/academia/academia-sala.js?v=20260812a" defer></script>
 </head>
 <body>
 
@@ -67,6 +68,10 @@
   </header>
 
   <main>
+
+    <!-- ══ VISTA A: el programa de la sala ══ -->
+    <div class="ac-sala-vista">
+
     <section class="ac-hero">
       <div class="contenedor">
         <nav class="ac-migas" aria-label="Ruta de navegación">
@@ -113,6 +118,17 @@
     <div class="contenedor">
       <section class="ac-cierre" id="acCierre"></section>
     </div>
+
+    </div><!-- /ac-sala-vista -->
+
+    <!-- ══ VISTA B: un módulo abierto (texto + video + material) ══
+         Se rellena desde academia-sala.js cuando la URL lleva
+         #modulo-N. No es otra página: por eso el cambio es
+         instantáneo y el botón atrás del navegador funciona. -->
+    <section class="ac-seccion ac-modulo-vista">
+      <div class="contenedor" id="acModulo"></div>
+    </section>
+
   </main>
 
   <footer class="ac-pie">

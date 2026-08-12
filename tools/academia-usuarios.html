@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es-PE">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accesos de la Academia · Droguería Suker (uso interno)</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#02164A">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/academia/academia.css?v=20260812a">
+
+  <style>
+    .u-envoltura { max-width: 1120px; margin-inline: auto; padding-block: 2.5rem 4rem; }
+    .u-cab { margin-bottom: 1.8rem; }
+    .u-cab h1 {
+      font-family: 'Sora', sans-serif; font-size: clamp(1.5rem, 4vw, 2.05rem);
+      font-weight: 800; letter-spacing: -.028em; margin-bottom: .5rem;
+    }
+    .u-cab p { color: var(--mist); font-size: .93rem; max-width: 68ch; line-height: 1.7; }
+    .u-panel {
+      padding: clamp(1.3rem, 3vw, 1.9rem);
+      border-radius: var(--r-xl);
+      border: 1px solid var(--line);
+      background: linear-gradient(155deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,.022) 100%);
+      margin-bottom: 1.5rem;
+    }
+    .u-panel h2 {
+      font-family: 'Sora', sans-serif; font-size: 1.12rem; font-weight: 700;
+      letter-spacing: -.018em; margin-bottom: 1.1rem;
+      display: flex; align-items: center; gap: .55rem; flex-wrap: wrap;
+    }
+    .u-panel h2 span.u-cuenta {
+      font-family: 'Poppins', sans-serif; font-size: .76rem; font-weight: 600;
+      color: var(--gold); background: rgba(255,196,1,.12);
+      border: 1px solid rgba(255,196,1,.28); border-radius: var(--r-pill);
+      padding: .18rem .7rem; letter-spacing: 0;
+    }
+    .u-fila { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; }
+    .u-fila-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .9rem; }
+    @media (max-width: 680px) { .u-fila, .u-fila-3 { grid-template-columns: 1fr; } }
+    select {
+      width: 100%; padding: .84rem .9rem; background: rgba(0,0,0,.26); color: #fff;
+      border: 1px solid var(--line); border-radius: var(--r-md); font: inherit; font-size: .95rem;
+    }
+    select option { background: #0B1F45; color: #fff; }
+    .u-dado {
+      display: grid; place-items: center; width: 40px; height: 40px; margin-right: .3rem;
+      border-radius: var(--r-sm); color: var(--mist-dim); transition: color .18s, background .18s;
+    }
+    .u-dado:hover { color: var(--gold); background: rgba(255,255,255,.06); }
+    .u-dado svg { width: 17px; height: 17px; }
+    .u-acciones { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: .4rem; }
+    .u-acciones .ac-btn { width: auto; }
+
+    .u-tabla-caja { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-md); }
+    .u-tabla { width: 100%; border-collapse: collapse; font-size: .86rem; }
+    .u-tabla th, .u-tabla td { padding: .7rem .85rem; text-align: left; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
+    .u-tabla thead th {
+      font-size: .7rem; letter-spacing: .09em; text-transform: uppercase;
+      color: var(--mist-dim); font-weight: 700; background: rgba(0,0,0,.22); white-space: nowrap;
+    }
+    .u-tabla tbody tr:last-child td { border-bottom: none; }
+    .u-tabla tbody tr:hover { background: rgba(255,255,255,.03); }
+    .u-tabla td b { display: block; font-weight: 650; }
+    .u-tabla td small { display: block; color: var(--mist-dim); font-size: .76rem; }
+    .u-clave { font-family: ui-monospace, 'Cascadia Code', Consolas, monospace; color: var(--gold); white-space: nowrap; }
+    .u-num { font-variant-numeric: tabular-nums; color: var(--mist-dim); white-space: nowrap; }
+    tr.is-suspendida { opacity: .55; }
+    .u-pastilla {
+      display: inline-block; padding: .16rem .6rem; border-radius: var(--r-pill);
+      font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+    }
+    .u-pastilla.ok { background: rgba(46,212,122,.14); color: #6FD8A2; }
+    .u-pastilla.no { background: rgba(255,176,32,.14); color: var(--amber); }
+    .u-mini {
+      padding: .32rem .75rem; border: 1px solid var(--line); border-radius: var(--r-pill);
+      font-size: .76rem; font-weight: 600; color: var(--mist); white-space: nowrap;
+      transition: background .18s, color .18s, border-color .18s;
+    }
+    .u-mini:hover { background: rgba(255,196,1,.14); color: var(--gold); border-color: rgba(255,196,1,.4); }
+    .u-vacio { padding: 1.6rem; text-align: center; color: var(--mist-dim); font-size: .88rem; }
+    .u-nota {
+      margin-top: 1.2rem; padding: .9rem 1.05rem; border-radius: var(--r-sm);
+      border: 1px solid var(--line-soft); background: rgba(0,0,0,.22);
+      font-size: .82rem; color: var(--mist-dim); line-height: 1.65;
+    }
+    .u-nota b { color: var(--white); }
+    .u-nota code { color: var(--gold); font-family: ui-monospace, Consolas, monospace; font-size: .95em; }
+  </style>
+
+  <script src="../assets/academia/academia-config.js?v=20260812a"></script>
+  <script src="../tools/academia-usuarios.js?v=20260812a" defer></script>
+</head>
+<body>
+
+<div class="contenedor u-envoltura">
+
+  <header class="u-cab">
+    <h1>Accesos de la Academia</h1>
+    <p>
+      Panel interno de Droguería Suker. Cada acceso que crees aquí se guarda en el
+      Excel <strong>«Academia Suker — Accesos»</strong> y el boticario puede entrar
+      de inmediato: no hay que tocar ningún archivo del sitio.
+    </p>
+  </header>
+
+  <div class="ac-aviso" id="uAviso" role="alert"></div>
+
+  <!-- ── Clave de administrador ── -->
+  <section class="u-panel">
+    <h2>Clave de administrador</h2>
+    <div class="ac-campo">
+      <label for="uAdmin">Se comprueba en Google; aquí no se guarda</label>
+      <div class="ac-campo-caja">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+        </svg>
+        <input id="uAdmin" type="password" placeholder="••••••••" autocomplete="off">
+      </div>
+    </div>
+    <div class="u-acciones">
+      <button class="ac-btn ac-btn-fantasma" id="uListar" type="button">Ver el padrón</button>
+    </div>
+  </section>
+
+  <!-- ── Crear acceso ── -->
+  <section class="u-panel">
+    <h2>Crear un acceso nuevo</h2>
+
+    <div class="u-fila">
+      <div class="ac-campo">
+        <label for="uUsuario">Usuario</label>
+        <div class="ac-campo-caja">
+          <input id="uUsuario" type="text" placeholder="botica.sanmartin" spellcheck="false" autocapitalize="none">
+        </div>
+      </div>
+      <div class="ac-campo">
+        <label for="uClave">Contraseña</label>
+        <div class="ac-campo-caja">
+          <input id="uClave" type="text" placeholder="escríbela o genérala" spellcheck="false" autocapitalize="none">
+          <button class="u-dado" id="uDado" type="button" aria-label="Sugerir una contraseña">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8.5 8.5h.01M15.5 8.5h.01M8.5 15.5h.01M15.5 15.5h.01M12 12h.01"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="u-fila-3">
+      <div class="ac-campo">
+        <label for="uNombre">Nombre del boticario</label>
+        <div class="ac-campo-caja"><input id="uNombre" type="text" placeholder="Sra. Rosa Mamani"></div>
+      </div>
+      <div class="ac-campo">
+        <label for="uBotica">Botica</label>
+        <div class="ac-campo-caja"><input id="uBotica" type="text" placeholder="Botica San Martín"></div>
+      </div>
+      <div class="ac-campo">
+        <label for="uCiudad">Ciudad o plaza</label>
+        <div class="ac-campo-caja"><input id="uCiudad" type="text" placeholder="Juliaca"></div>
+      </div>
+    </div>
+
+    <div class="u-fila-3">
+      <div class="ac-campo">
+        <label for="uRol">Rol</label>
+        <select id="uRol">
+          <option value="boticario">Boticario (cliente)</option>
+          <option value="admin">Administrador (equipo Suker)</option>
+        </select>
+      </div>
+      <div class="ac-campo">
+        <label for="uVence">Vence el (opcional)</label>
+        <div class="ac-campo-caja"><input id="uVence" type="date"></div>
+      </div>
+      <div class="ac-campo">
+        <label for="uNotas">Notas (opcional)</label>
+        <div class="ac-campo-caja"><input id="uNotas" type="text" placeholder="Cliente de Cielo · ruta Azángaro"></div>
+      </div>
+    </div>
+
+    <div class="u-acciones">
+      <button class="ac-btn ac-btn-oro" id="uCrear" type="button">Crear acceso</button>
+    </div>
+
+    <div class="u-nota">
+      <b>Cómo funciona:</b> la contraseña se guarda en el Excel y se verifica allí mismo,
+      en los servidores de Google — nunca llega al navegador de quien intenta entrar.
+      Por eso el Excel <b>no se comparte con nadie fuera del equipo</b>.
+    </div>
+  </section>
+
+  <!-- ── Padrón ── -->
+  <section class="u-panel">
+    <h2>Padrón de accesos <span class="u-cuenta" id="uTotal">—</span></h2>
+    <div class="u-tabla-caja" id="uTabla">
+      <p class="u-vacio">Escribe la clave de administrador y pulsa «Ver el padrón».</p>
+    </div>
+    <div class="u-nota">
+      <b>Suspender</b> deja el acceso bloqueado sin borrar el historial; se puede reactivar
+      cuando quieras. La columna <b>Ingresos</b> te dice cuántas veces entró ese boticario:
+      sirve para saber quién está aprovechando la Academia y quién necesita un empujón.
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

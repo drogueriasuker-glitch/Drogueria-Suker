@@ -1,26 +1,55 @@
 /* ============================================================
-   ACADEMIA SUKER — academia-datos.js  v=20260811
+   ACADEMIA SUKER — academia-datos.js  v=20260812
    Todo el contenido de las dos salas vive aquí. Para cambiar un
-   texto o publicar un video NO hace falta tocar el HTML.
+   texto, publicar un video o colgar un PDF NO hace falta tocar
+   el HTML.
+
+   ▸ CÓMO ES UN MÓDULO
+     Cada módulo tiene su propia pantalla: al hacer clic en la
+     tarjeta se abre con su texto, su video y su material de
+     apoyo (PDF, Drive, plantillas, enlaces… los que quieras).
+
+     {
+       modulo:   "Módulo 2",              rótulo corto
+       titulo:   "…",                     título del módulo
+       resumen:  "…",                     una línea, para la tarjeta
+       duracion: "16:40",                 la real que muestra YouTube
+       id:       "U4YXMN_soo8",           ID del video de YouTube
+       estado:   "disponible",            o "programado" (candado)
+       habilita: "Se habilita al…",       solo si está "programado"
+       demo:     true,                    pone la etiqueta "Vista previa"
+       descripcion: "…",                  párrafo(s) de la pantalla
+       aprenderas: ["…", "…"],            lista de lo que se lleva
+       recursos: [ … ]                    material de apoyo (abajo)
+     }
+
+   ▸ CÓMO AGREGAR MATERIAL A UN MÓDULO
+     Dentro de "recursos" agrega tantos como quieras:
+
+     { tipo: "pdf",    titulo: "Guía rápida",  detalle: "PDF · 4 páginas",  url: "https://…" }
+
+     Tipos disponibles (cada uno pinta su propio icono y color):
+       "pdf"      documento PDF
+       "drive"    carpeta de Google Drive
+       "hoja"     Google Sheets / Excel
+       "doc"      Google Docs / Word
+       "imagen"   infografía, afiche, foto
+       "enlace"   página web externa
+       "video"    video extra (otro de YouTube)
+       "wa"       conversación de WhatsApp
+
+     Si dejas url: "" el material aparece en gris como
+     "Disponible pronto" — no se rompe nada.
 
    ▸ PARA PUBLICAR UN VIDEO
-     1. Sube el video a YouTube en modo "Oculto / No listado".
-     2. Copia el ID: en youtu.be/U4YXMN_soo8 el ID es U4YXMN_soo8.
-     3. En el módulo que corresponda pon:  id: "U4YXMN_soo8",
-        estado: "disponible"  y borra la línea  demo: true.
-     4. Ajusta "duracion" a la real (mm:ss o h:mm:ss).
-
-   ▸ ESTADOS DE UN MÓDULO
-     "disponible" → se ve la portada y se reproduce al hacer clic.
-     "programado" → tarjeta con candado y la fecha/condición de
-                    apertura (contenido por goteo: se habilita
-                    cuando el boticario termina el anterior).
+     1. Súbelo a YouTube en modo "Oculto / No listado".
+     2. En youtu.be/U4YXMN_soo8 el ID es U4YXMN_soo8.
+     3. Pon el id, cambia estado a "disponible", ajusta duracion
+        y borra las lineas habilita y demo.
 
    ▸ NOTA DE RENDIMIENTO
-     Los videos NUNCA se cargan al abrir la página: solo se pinta
-     la portada (una imagen de ~15 KB) y el reproductor se inyecta
-     recién cuando el usuario pulsa play. Por eso la sala abre
-     igual de rápido con 6 módulos que con 60.
+     Los videos NUNCA se cargan al abrir la sala: solo se pinta
+     la portada y el reproductor se inyecta al pulsar play.
    ============================================================ */
 
 window.ACADEMIA_CONTENIDO = {
@@ -33,7 +62,6 @@ window.ACADEMIA_CONTENIDO = {
     cinta: "Sala 01 · Formales",
     titulo: 'Lo que <em>ya ganaste</em> siendo formal',
     bajada: 'Tú ya diste el paso más difícil: tienes tus permisos, compras con factura y respondes por lo que vendes. Esta sala existe para que veas con nombre y apellido <strong>todo lo que eso te está devolviendo</strong> — y para que sepas exactamente cómo exprimirlo.',
-    acento: "oro",
 
     tarjetas: [
       {
@@ -88,7 +116,19 @@ window.ACADEMIA_CONTENIDO = {
         duracion: "15:12",
         id: "U4YXMN_soo8",
         estado: "disponible",
-        demo: true
+        demo: true,
+        descripcion: "Casi todos los boticarios saben que necesitan sus permisos, pero pocos han visto en una sola imagen todo lo que esos permisos les están dando. En este módulo ordenamos el panorama completo: qué te habilita legalmente cada documento, qué riesgos te quita de encima y — lo que más interesa — qué oportunidades comerciales solo existen para ti por tenerlos en regla.",
+        aprenderas: [
+          "Qué documentos debe tener colgados y vigentes tu botica, y cuál revisa primero un inspector",
+          "La diferencia real entre estar registrado y estar en regla",
+          "Por qué la formalidad es lo que te convierte en sujeto de crédito",
+          "Qué clientes (clínicas, consultorios, convenios) solo puedes atender siendo formal"
+        ],
+        recursos: [
+          { tipo: "pdf",   titulo: "Checklist: los 9 documentos de tu botica", detalle: "PDF · 2 páginas · para imprimir", url: "" },
+          { tipo: "drive", titulo: "Carpeta de formatos editables",           detalle: "Google Drive",                    url: "" },
+          { tipo: "enlace",titulo: "Consulta de establecimientos DIGEMID",    detalle: "Sitio oficial del MINSA",         url: "https://www.digemid.minsa.gob.pe/" }
+        ]
       },
       {
         modulo: "Módulo 2",
@@ -97,7 +137,18 @@ window.ACADEMIA_CONTENIDO = {
         duracion: "16:40",
         id: "",
         estado: "programado",
-        habilita: "Se habilita al terminar el Módulo 1"
+        habilita: "Se habilita al terminar el Módulo 1",
+        descripcion: "El registro sanitario es la diferencia entre un medicamento y una caja con pastillas adentro. Aquí te enseñamos a leerlo en el empaque sin lupa, a verificarlo en el buscador oficial en menos de medio minuto, y a reconocer las señales de un registro vencido, cancelado o simplemente inventado.",
+        aprenderas: [
+          "Dónde está impreso el registro sanitario en cada tipo de empaque",
+          "Cómo verificarlo en el buscador de DIGEMID desde tu celular",
+          "Qué significa que un registro esté vencido, suspendido o cancelado",
+          "Qué responder cuando un proveedor no te lo quiere mostrar"
+        ],
+        recursos: [
+          { tipo: "pdf",    titulo: "Guía visual: dónde mirar en cada empaque", detalle: "PDF · 4 páginas", url: "" },
+          { tipo: "enlace", titulo: "Buscador de registro sanitario",           detalle: "DIGEMID en línea", url: "https://www.digemid.minsa.gob.pe/" }
+        ]
       },
       {
         modulo: "Módulo 3",
@@ -106,7 +157,18 @@ window.ACADEMIA_CONTENIDO = {
         duracion: "14:55",
         id: "",
         estado: "programado",
-        habilita: "Se habilita al terminar el Módulo 2"
+        habilita: "Se habilita al terminar el Módulo 2",
+        descripcion: "Las Buenas Prácticas de Almacenamiento están escritas pensando en almacenes grandes, y eso desanima a quien tiene diez metros cuadrados. En este módulo las traducimos a la realidad de una botica de barrio en el altiplano: qué es obligatorio, qué es recomendable y cómo cumplir con lo que ya tienes.",
+        aprenderas: [
+          "Los rangos de temperatura y humedad que sí debes controlar, y con qué",
+          "Cómo ordenar el anaquel para que la rotación se dé sola",
+          "Qué productos nunca deben ir juntos ni cerca de la ventana",
+          "El registro diario mínimo que te cubre ante una inspección"
+        ],
+        recursos: [
+          { tipo: "hoja", titulo: "Planilla de control de temperatura y humedad", detalle: "Google Sheets · lista para copiar", url: "" },
+          { tipo: "pdf",  titulo: "Cartilla de orden del anaquel",                detalle: "PDF · para pegar en la pared",      url: "" }
+        ]
       },
       {
         modulo: "Módulo 4",
@@ -115,7 +177,18 @@ window.ACADEMIA_CONTENIDO = {
         duracion: "15:30",
         id: "",
         estado: "programado",
-        habilita: "Se habilita al terminar el Módulo 3"
+        habilita: "Se habilita al terminar el Módulo 3",
+        descripcion: "El producto vencido es plata que ya pagaste y que se va directo a la basura. Aquí montamos un sistema simple —de cuaderno o de Excel, tú eliges— que te avisa a los 60, 30 y 15 días, para que siempre tengas tiempo de canjear con el proveedor o rematar antes de perderlo todo.",
+        aprenderas: [
+          "Cómo montar el aviso de 60-30-15 días sin sistema caro",
+          "Qué se puede canjear con el proveedor y hasta cuándo",
+          "Cuándo conviene rematar y a qué precio para no perder",
+          "Cómo dar de baja lo vencido dejando constancia"
+        ],
+        recursos: [
+          { tipo: "hoja", titulo: "Plantilla de control de vencimientos", detalle: "Google Sheets · con alertas automáticas", url: "" },
+          { tipo: "pdf",  titulo: "Acta de baja de producto vencido",     detalle: "PDF · formato para llenar",              url: "" }
+        ]
       },
       {
         modulo: "Módulo 5",
@@ -124,7 +197,19 @@ window.ACADEMIA_CONTENIDO = {
         duracion: "17:05",
         id: "",
         estado: "programado",
-        habilita: "Se habilita al terminar el Módulo 4"
+        habilita: "Se habilita al terminar el Módulo 4",
+        descripcion: "Este es el módulo de la plata. Explicamos sin tecnicismos qué es el crédito fiscal, por qué una compra con factura te sale más barata de lo que parece, y cómo funciona exactamente la línea de crédito de Suker: qué es un pedido limpio, cuándo sube tu nivel y qué la hace bajar.",
+        aprenderas: [
+          "Qué es el crédito fiscal y cómo calcular cuánto te devuelve una compra",
+          "Los cuatro niveles de crédito de Suker y qué pide cada uno",
+          "Qué cuenta como pedido limpio y qué te hace bajar de nivel",
+          "Cómo ordenar tus comprobantes para no perder ninguno"
+        ],
+        recursos: [
+          { tipo: "hoja",  titulo: "Calculadora: cuánto te devuelve comprar con factura", detalle: "Google Sheets", url: "" },
+          { tipo: "pdf",   titulo: "Los 4 niveles de crédito Suker",                      detalle: "PDF · 1 página", url: "" },
+          { tipo: "wa",    titulo: "Consultar mi nivel de crédito actual",                detalle: "WhatsApp con tu asesor", url: "https://wa.me/51932667799?text=Hola%20Suker%2C%20quiero%20saber%20en%20qu%C3%A9%20nivel%20de%20cr%C3%A9dito%20estoy" }
+        ]
       },
       {
         modulo: "Módulo 6",
@@ -133,7 +218,18 @@ window.ACADEMIA_CONTENIDO = {
         duracion: "15:48",
         id: "",
         estado: "programado",
-        habilita: "Se habilita al terminar el Módulo 5"
+        habilita: "Se habilita al terminar el Módulo 5",
+        descripcion: "Una inspección deja de dar miedo cuando sabes exactamente qué van a pedirte. Armamos juntos la carpeta que debe estar siempre lista, repasamos las diez observaciones que más se repiten en Puno y ensayamos cómo responder con tranquilidad cuando algo no está perfecto.",
+        aprenderas: [
+          "Qué lleva la carpeta de inspección, documento por documento",
+          "Las diez observaciones más frecuentes y cómo evitarlas antes",
+          "Qué decir y qué no decir durante la visita",
+          "Qué hacer en los días siguientes si te dejan una observación"
+        ],
+        recursos: [
+          { tipo: "pdf",   titulo: "Carpeta de inspección: índice completo", detalle: "PDF · 3 páginas",  url: "" },
+          { tipo: "drive", titulo: "Formatos de la carpeta, editables",      detalle: "Google Drive",     url: "" }
+        ]
       }
     ],
 
@@ -156,7 +252,6 @@ window.ACADEMIA_CONTENIDO = {
     cinta: "Sala 02 · Informales",
     titulo: 'El costo real del <em>canal informal</em>',
     bajada: 'Esta sala no juzga a nadie. Comprar en el mercado informal casi siempre empieza por una razón entendible: la caja está justa y el precio tienta. Lo que aquí verás es <strong>la cuenta completa</strong> — la que no aparece en la boleta, pero se paga igual.',
-    acento: "riesgo",
 
     tarjetas: [
       {
@@ -211,7 +306,18 @@ window.ACADEMIA_CONTENIDO = {
         duracion: "15:20",
         id: "U4YXMN_soo8",
         estado: "disponible",
-        demo: true
+        demo: true,
+        descripcion: "Para decidir bien hay que entender primero cómo funciona el otro lado. Seguimos la ruta completa de la mercadería informal que llega a Juliaca: de dónde sale, por dónde entra, cuántas manos toca y en qué condiciones viaja. Cuando ves el recorrido completo, el precio bajo deja de ser un misterio.",
+        aprenderas: [
+          "La ruta real del producto sin registro hasta tu barrio",
+          "Por qué el precio es tan bajo y qué se está ahorrando en el camino",
+          "En qué condiciones viaja la mercadería por el altiplano",
+          "Cómo reconocer a un proveedor informal aunque se presente como formal"
+        ],
+        recursos: [
+          { tipo: "pdf",    titulo: "Señales de alerta de un proveedor informal", detalle: "PDF · 2 páginas", url: "" },
+          { tipo: "enlace", titulo: "Verificar si un proveedor está autorizado",  detalle: "DIGEMID en línea", url: "https://www.digemid.minsa.gob.pe/" }
+        ]
       },
       {
         modulo: "Módulo 2",
@@ -220,7 +326,18 @@ window.ACADEMIA_CONTENIDO = {
         duracion: "16:10",
         id: "",
         estado: "programado",
-        habilita: "Se habilita al terminar el Módulo 1"
+        habilita: "Se habilita al terminar el Módulo 1",
+        descripcion: "Un medicamento falsificado bien hecho engaña a simple vista, pero casi siempre falla en los detalles. Repasamos con ejemplos reales qué mirar en el troquelado, el lote, la tinta, el blíster y el sellado, para que puedas descartar un lote sospechoso antes de firmar la recepción.",
+        aprenderas: [
+          "Los seis puntos que se revisan en menos de un minuto",
+          "Diferencias de impresión y troquelado que delatan una copia",
+          "Qué hacer si ya recibiste un lote sospechoso",
+          "A quién y cómo reportarlo"
+        ],
+        recursos: [
+          { tipo: "pdf",    titulo: "Los 6 puntos de revisión, ilustrados", detalle: "PDF · para pegar en recepción", url: "" },
+          { tipo: "imagen", titulo: "Comparativo: original vs. falsificado", detalle: "Infografía",                    url: "" }
+        ]
       },
       {
         modulo: "Módulo 3",
@@ -229,7 +346,18 @@ window.ACADEMIA_CONTENIDO = {
         duracion: "14:40",
         id: "",
         estado: "programado",
-        habilita: "Se habilita al terminar el Módulo 2"
+        habilita: "Se habilita al terminar el Módulo 2",
+        descripcion: "Un producto que perdió la cadena de frío se ve exactamente igual que uno bueno. Ese es todo el problema. Explicamos qué le pasa por dentro a una insulina o a un antibiótico cuando el termómetro se sale de rango, por qué el paciente no lo nota hasta que el tratamiento no funciona, y cómo protegerte al recibir.",
+        aprenderas: [
+          "Qué productos exigen cadena de frío y cuál es su rango real",
+          "Qué le ocurre al principio activo cuando la cadena se rompe",
+          "Cómo verificar la temperatura al recibir un pedido",
+          "Cuándo debes rechazar una entrega, sin discutir"
+        ],
+        recursos: [
+          { tipo: "pdf",  titulo: "Productos de cadena de frío y sus rangos", detalle: "PDF · tabla de consulta", url: "" },
+          { tipo: "hoja", titulo: "Registro de recepción con temperatura",    detalle: "Google Sheets",           url: "" }
+        ]
       },
       {
         modulo: "Módulo 4",
@@ -238,7 +366,17 @@ window.ACADEMIA_CONTENIDO = {
         duracion: "15:55",
         id: "",
         estado: "programado",
-        habilita: "Se habilita al terminar el Módulo 3"
+        habilita: "Se habilita al terminar el Módulo 3",
+        descripcion: "Nadie lee el reglamento completo, pero todos deberían conocer las consecuencias. Traducimos el marco sancionador a lenguaje de mostrador: qué conductas se consideran falta, en qué rango de UIT se mueve cada una, qué pasa con la mercadería incautada y cuánto tiempo puede quedarse cerrada una botica.",
+        aprenderas: [
+          "Qué se considera falta leve, grave y muy grave",
+          "El rango de multas en UIT y cómo se calcula",
+          "Qué ocurre con el stock decomisado (y por qué no vuelve)",
+          "Cuánto puede durar un cierre temporal y qué se pierde mientras tanto"
+        ],
+        recursos: [
+          { tipo: "pdf", titulo: "Resumen del cuadro de sanciones", detalle: "PDF · 2 páginas", url: "" }
+        ]
       },
       {
         modulo: "Módulo 5",
@@ -247,7 +385,18 @@ window.ACADEMIA_CONTENIDO = {
         duracion: "15:05",
         id: "",
         estado: "programado",
-        habilita: "Se habilita al terminar el Módulo 4"
+        habilita: "Se habilita al terminar el Módulo 4",
+        descripcion: "Aquí no hay moral, hay calculadora. Tomamos una compra real y le sacamos la cuenta completa: el descuento aparente del canal informal contra el crédito fiscal que pierdes, las mermas que no puedes canjear, las devoluciones que nadie te acepta y el riesgo de multa. El resultado suele sorprender a quien lo ve por primera vez.",
+        aprenderas: [
+          "Cómo calcular el costo real de una compra, no el precio de lista",
+          "Cuánto vale en soles el crédito fiscal que estás dejando de usar",
+          "Qué peso tienen las mermas y devoluciones que no puedes canjear",
+          "Cómo comparar dos proveedores con el mismo criterio"
+        ],
+        recursos: [
+          { tipo: "hoja", titulo: "Comparador de costo real por proveedor", detalle: "Google Sheets · llena y compara", url: "" },
+          { tipo: "pdf",  titulo: "El ejemplo del video, paso a paso",      detalle: "PDF · 3 páginas",                url: "" }
+        ]
       },
       {
         modulo: "Módulo 6",
@@ -256,7 +405,18 @@ window.ACADEMIA_CONTENIDO = {
         duracion: "17:30",
         id: "",
         estado: "programado",
-        habilita: "Se habilita al terminar el Módulo 5"
+        habilita: "Se habilita al terminar el Módulo 5",
+        descripcion: "Cambiar de proveedor da miedo cuando tu caja depende de la rotación diaria. Por eso la transición se hace por partes y en un orden que protege tu flujo: qué categorías migrar primero, cómo negociar el primer pedido, y en cuánto tiempo entras a la línea de crédito. Es el camino que ya recorrimos con otras boticas.",
+        aprenderas: [
+          "Qué categorías conviene migrar primero y por qué",
+          "Cómo hacer el primer pedido sin descapitalizarte",
+          "En cuántas semanas se completa una transición típica",
+          "Qué pedirle a tu nuevo proveedor desde el primer día"
+        ],
+        recursos: [
+          { tipo: "pdf", titulo: "Plan de transición en 4 semanas",   detalle: "PDF · 2 páginas",        url: "" },
+          { tipo: "wa",  titulo: "Pedir mi diagnóstico sin compromiso", detalle: "WhatsApp con tu asesor", url: "https://wa.me/51932667799?text=Hola%20Suker%2C%20vengo%20del%20M%C3%B3dulo%206%20y%20quiero%20mi%20diagn%C3%B3stico" }
+        ]
       }
     ],
 

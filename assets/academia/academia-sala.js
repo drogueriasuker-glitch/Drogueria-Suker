@@ -1,12 +1,16 @@
 /* ============================================================
-   ACADEMIA SUKER — academia-sala.js  v=20260811
-   Pinta una sala (tarjetas + módulos de video) desde
-   academia-datos.js y gestiona la carga diferida de YouTube.
+   ACADEMIA SUKER — academia-sala.js  v=20260812
+   Pinta una sala (tarjetas + programa de módulos) y la pantalla
+   de cada módulo (texto + video + material de apoyo).
 
-   CLAVE DE RENDIMIENTO: al abrir la sala NO se descarga nada de
-   YouTube. Solo se pinta la portada del video (una imagen) y el
-   reproductor se inyecta al pulsar play. Eso ahorra ~1,5 MB y
-   más de 20 peticiones por página respecto a incrustar 6 iframes.
+   NAVEGACIÓN: al abrir un módulo la URL pasa a #modulo-2, así el
+   botón "atrás" del navegador vuelve al listado y el enlace de un
+   módulo se puede compartir. Todo ocurre en la misma página: no
+   hay recarga ni petición extra.
+
+   RENDIMIENTO: al abrir la sala NO se descarga nada de YouTube.
+   Solo se pinta la portada del video (una imagen) y el reproductor
+   se inyecta al pulsar play, dentro del módulo.
    ============================================================ */
 (function (win, doc) {
   "use strict";
@@ -32,14 +36,37 @@
     reloj:        '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
     check:        '<path d="M20 6 9 17l-5-5"/>',
     flecha:       '<path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>',
+    atras:        '<path d="M19 12H5"/><path d="M11 18l-6-6 6-6"/>',
     chevron:      '<path d="M9 6l6 6-6 6"/>',
-    wa:           '<path d="M3 21l1.7-5A8.4 8.4 0 1 1 8 19.4L3 21z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5"/>'
+    wa:           '<path d="M3 21l1.7-5A8.4 8.4 0 1 1 8 19.4L3 21z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5"/>',
+    libro:        '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M8 8h7M8 12h7"/>',
+    pelicula:     '<rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M8 5v14M16 5v14M2.5 12h19"/>',
+    maletin:      '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/>',
+    /* Tipos de material de apoyo */
+    pdf:          '<path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7l-5-5z"/><path d="M14 2v5h5"/><path d="M9 13h6M9 17h4"/>',
+    drive:        '<path d="M8.4 3h7.2l5.4 9.3-3.6 6.2H6.6L3 12.3 8.4 3z"/><path d="M8.4 3 3 12.3M15.6 3l-5.4 9.3M3.1 12.3h17.8"/>',
+    hoja:         '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>',
+    doc:          '<path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7l-5-5z"/><path d="M14 2v5h5"/><path d="M8.5 12.5h7M8.5 16h5"/>',
+    imagen:       '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.8"/><path d="m4 17 4.5-4.5 3.5 3.5 3-3L20 17"/>',
+    enlace:       '<path d="M10 13a4 4 0 0 0 5.7.3l3-3a4 4 0 1 0-5.7-5.7L11.5 6"/><path d="M14 11a4 4 0 0 0-5.7-.3l-3 3a4 4 0 1 0 5.7 5.7l1.4-1.4"/>',
+    descarga:     '<path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/>'
+  };
+
+  /* Etiqueta legible para cada tipo de material */
+  var NOMBRE_TIPO = {
+    pdf: "PDF", drive: "Google Drive", hoja: "Hoja de cálculo", doc: "Documento",
+    imagen: "Imagen", enlace: "Enlace", video: "Video", wa: "WhatsApp", descarga: "Descarga"
   };
 
   function svg(nombre, extra) {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" ' +
            'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"' +
-           (extra ? " " + extra : "") + ">" + (ICONOS[nombre] || "") + "</svg>";
+           (extra ? " " + extra : "") + ">" + (ICONOS[nombre] || ICONOS.enlace) + "</svg>";
+  }
+
+  function iconoDeTipo(tipo) {
+    if (tipo === "video") { return "pelicula"; }
+    return ICONOS[tipo] ? tipo : "enlace";
   }
 
   /* ---------- Utilidades ---------- */
@@ -83,7 +110,7 @@
     });
   }
 
-  /* ---------- Portadas de YouTube ---------- */
+  /* ---------- YouTube: portada ahora, reproductor al pulsar ---------- */
   var yaConectado = false;
   function precalentarYouTube() {
     if (yaConectado) { return; }
@@ -94,6 +121,22 @@
       l.href = u;
       l.crossOrigin = "";
       doc.head.appendChild(l);
+    });
+  }
+
+  function portada(id, alt, clases) {
+    return '<img src="https://i.ytimg.com/vi/' + esc(id) + '/maxresdefault.jpg" ' +
+           'data-respaldo="https://i.ytimg.com/vi/' + esc(id) + '/hqdefault.jpg" ' +
+           'alt="' + esc(alt) + '" width="1280" height="720" loading="lazy" decoding="async"' +
+           (clases ? ' class="' + clases + '"' : '') + '>';
+  }
+
+  function conectarRespaldoPortadas(caja) {
+    Array.prototype.forEach.call(caja.querySelectorAll("img[data-respaldo]"), function (img) {
+      img.addEventListener("error", function () {
+        var alt = img.getAttribute("data-respaldo");
+        if (alt && img.src !== alt) { img.src = alt; }
+      }, { once: true });
     });
   }
 
@@ -111,9 +154,11 @@
     marco.classList.add("is-reproduciendo");
   }
 
-  /* ---------- Pintado de las 7 tarjetas ---------- */
+  /* ══════════════════════════════════════════════════════════
+     LISTADO DE LA SALA
+     ══════════════════════════════════════════════════════════ */
   function pintarTarjetas(caja, tarjetas) {
-    var html = tarjetas.map(function (t, i) {
+    caja.innerHTML = tarjetas.map(function (t, i) {
       return '<article class="ac-tarjeta">' +
                '<div class="ac-tarjeta-cab">' +
                  '<span class="ac-tarjeta-icono">' + svg(t.icono) + '</span>' +
@@ -126,44 +171,31 @@
                  : '') +
              '</article>';
     }).join("");
-    caja.innerHTML = html;
     revelar(caja.children, true);
   }
 
-  /* ---------- Pintado de los módulos de video ---------- */
-  function pintarVideos(caja, videos, sala) {
+  function pintarModulos(caja, videos, sala) {
     var vistos = leerVistos();
 
-    var html = videos.map(function (v, i) {
-      var clave = sala + ":" + i;
-      var visto = !!vistos[clave];
+    caja.innerHTML = videos.map(function (v, i) {
+      var visto = !!vistos[sala + ":" + i];
       var disponible = v.estado === "disponible" && v.id;
+      var nRecursos = (v.recursos || []).length;
 
-      var marco;
-      if (disponible) {
-        marco =
-          '<div class="ac-marco" data-indice="' + i + '">' +
-            '<img src="https://i.ytimg.com/vi/' + esc(v.id) + '/maxresdefault.jpg" ' +
-                 'data-respaldo="https://i.ytimg.com/vi/' + esc(v.id) + '/hqdefault.jpg" ' +
-                 'alt="Portada de ' + esc(v.titulo) + '" width="1280" height="720" ' +
-                 'loading="lazy" decoding="async">' +
+      var marco = disponible
+        ? '<div class="ac-marco">' +
+            portada(v.id, "Portada de " + v.titulo) +
             (v.demo ? '<span class="ac-etiqueta ac-etiqueta-demo">Vista previa</span>' : '') +
             '<span class="ac-duracion">' + esc(v.duracion) + '</span>' +
-            '<button class="ac-play" type="button" data-play="' + i + '" ' +
-                    'aria-label="Reproducir ' + esc(v.modulo) + ': ' + esc(v.titulo) + '">' +
-              '<span class="ac-play-circulo">' +
-                '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6L19 12z"/></svg>' +
-              '</span>' +
-            '</button>' +
-          '</div>';
-      } else {
-        marco =
-          '<div class="ac-marco ac-marco-agenda">' +
+            '<span class="ac-play"><span class="ac-play-circulo">' +
+              '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6L19 12z"/></svg>' +
+            '</span></span>' +
+          '</div>'
+        : '<div class="ac-marco ac-marco-agenda">' +
             '<span class="ac-etiqueta ac-etiqueta-agenda">Próximo módulo</span>' +
             '<span class="candado">' + svg("candado") + '</span>' +
             '<span>' + esc(v.habilita || "Se habilita al avanzar en el programa") + '</span>' +
           '</div>';
-      }
 
       return '<article class="ac-video">' +
                marco +
@@ -173,45 +205,29 @@
                  '<p>' + esc(v.resumen) + '</p>' +
                  '<div class="ac-video-meta">' +
                    '<span>' + svg("reloj") + esc(v.duracion) + '</span>' +
-                   (visto
-                     ? '<span data-visto="' + i + '">' + svg("check") + 'Visto</span>'
-                     : '<span data-visto="' + i + '"></span>') +
+                   (nRecursos
+                     ? '<span class="ac-video-recursos">' + svg("maletin") + nRecursos + ' recurso' + (nRecursos > 1 ? 's' : '') + '</span>'
+                     : '') +
+                   (visto ? '<span>' + svg("check") + 'Visto</span>' : '') +
+                   '<span class="ac-video-entrar">Abrir' + svg("flecha") + '</span>' +
                  '</div>' +
                '</div>' +
+               '<button class="ac-video-abrir" type="button" data-modulo="' + i + '" ' +
+                       'aria-label="Abrir ' + esc(v.modulo) + ': ' + esc(v.titulo) + '"></button>' +
              '</article>';
     }).join("");
 
-    caja.innerHTML = html;
     revelar(caja.children, true);
+    conectarRespaldoPortadas(caja);
 
-    /* Respaldo de portada: algunos videos no tienen versión maxres */
-    Array.prototype.forEach.call(caja.querySelectorAll(".ac-marco img"), function (img) {
-      img.addEventListener("error", function () {
-        var alt = img.getAttribute("data-respaldo");
-        if (alt && img.src !== alt) { img.src = alt; }
-      }, { once: true });
-    });
-
-    /* Precalentar la conexión con YouTube en cuanto haya intención */
     caja.addEventListener("pointerenter", precalentarYouTube, { once: true, capture: true });
     caja.addEventListener("focusin", precalentarYouTube, { once: true });
 
-    /* Reproducir bajo demanda */
     caja.addEventListener("click", function (ev) {
-      var btn = ev.target.closest ? ev.target.closest("[data-play]") : null;
+      var btn = ev.target.closest ? ev.target.closest("[data-modulo]") : null;
       if (!btn) { return; }
-      var i = parseInt(btn.getAttribute("data-play"), 10);
-      var v = videos[i];
-      if (!v || !v.id) { return; }
-      precalentarYouTube();
-      reproducir(btn.parentNode, v);
-      marcarVisto(sala + ":" + i);
-      var sello = caja.querySelector('[data-visto="' + i + '"]');
-      if (sello && !sello.innerHTML) { sello.innerHTML = svg("check") + "Visto"; }
-      actualizarAvance(videos, sala);
+      abrirModulo(parseInt(btn.getAttribute("data-modulo"), 10), true);
     });
-
-    actualizarAvance(videos, sala);
   }
 
   function actualizarAvance(videos, sala) {
@@ -222,7 +238,178 @@
     el.textContent = n + " de " + videos.length + " módulos iniciados · ≈ 15 min cada uno";
   }
 
-  /* ---------- Pintado del cierre ---------- */
+  /* ══════════════════════════════════════════════════════════
+     PANTALLA DE UN MÓDULO
+     ══════════════════════════════════════════════════════════ */
+  var DATOS = null, SALA = "", VISTA = null;
+
+  function pintarRecursos(recursos) {
+    if (!recursos || !recursos.length) {
+      return '<p>El material de apoyo de este módulo se publica junto con el video.</p>';
+    }
+    return '<div class="ac-recursos">' + recursos.map(function (r) {
+      var etiqueta = r.detalle || NOMBRE_TIPO[r.tipo] || "Material";
+      var icono = '<span class="ac-recurso-icono">' + svg(iconoDeTipo(r.tipo)) + '</span>';
+      var texto = '<span class="ac-recurso-txt"><b>' + esc(r.titulo) + '</b><span>' + esc(etiqueta) + '</span></span>';
+
+      if (!r.url) {
+        return '<div class="ac-recurso is-pendiente">' + icono + texto +
+                 '<span class="ac-recurso-sello">Pronto</span>' +
+               '</div>';
+      }
+      return '<a class="ac-recurso" href="' + esc(r.url) + '" target="_blank" rel="noopener">' +
+               icono + texto +
+               '<span class="ac-recurso-flecha">' + svg("flecha") + '</span>' +
+             '</a>';
+    }).join("") + '</div>';
+  }
+
+  function pintarModulo(i) {
+    var videos = DATOS.videos || [];
+    var v = videos[i];
+    if (!v || !VISTA) { return; }
+
+    var disponible = v.estado === "disponible" && v.id;
+    var anterior = videos[i - 1];
+    var siguiente = videos[i + 1];
+
+    var reproductor = disponible
+      ? '<div class="ac-reproductor" id="acReproductor">' +
+          portada(v.id, "Portada de " + v.titulo) +
+          '<button class="ac-play" type="button" id="acPlay" aria-label="Reproducir el video del módulo">' +
+            '<span class="ac-play-circulo">' +
+              '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6L19 12z"/></svg>' +
+            '</span>' +
+          '</button>' +
+          '<span class="ac-duracion">' + esc(v.duracion) + '</span>' +
+          (v.demo ? '<span class="ac-etiqueta ac-etiqueta-demo">Vista previa</span>' : '') +
+        '</div>'
+      : '<div class="ac-reproductor ac-reproductor-agenda">' +
+          '<span class="candado">' + svg("candado") + '</span>' +
+          '<b>Este módulo todavía no está publicado</b>' +
+          '<span>' + esc(v.habilita || "Se habilita al avanzar en el programa") + '</span>' +
+        '</div>';
+
+    VISTA.innerHTML =
+      '<button class="ac-volver" type="button" id="acVolver">' +
+        svg("atras") + 'Volver al programa' +
+      '</button>' +
+
+      '<header class="ac-modulo-cab">' +
+        '<span class="ac-modulo-num">' + esc(v.modulo) + '</span>' +
+        '<h1>' + esc(v.titulo) + '</h1>' +
+        '<div class="ac-modulo-datos">' +
+          '<span class="ac-chip">' + svg("reloj") + esc(v.duracion) + '</span>' +
+          '<span class="ac-chip">' + svg(disponible ? "pelicula" : "candado") +
+            (disponible ? 'Video disponible' : 'Próximamente') + '</span>' +
+          ((v.recursos || []).length
+            ? '<span class="ac-chip">' + svg("maletin") + v.recursos.length + ' material' + (v.recursos.length > 1 ? 'es' : '') + ' de apoyo</span>'
+            : '') +
+        '</div>' +
+      '</header>' +
+
+      '<section class="ac-bloque">' +
+        '<h2 class="ac-bloque-tit">' + svg("libro") + 'De qué trata</h2>' +
+        '<p>' + esc(v.descripcion || v.resumen) + '</p>' +
+        ((v.aprenderas || []).length
+          ? '<ul class="ac-aprender">' + v.aprenderas.map(function (a) {
+              return '<li>' + svg("check") + '<span>' + esc(a) + '</span></li>';
+            }).join("") + '</ul>'
+          : '') +
+      '</section>' +
+
+      '<section class="ac-bloque">' +
+        '<h2 class="ac-bloque-tit">' + svg("pelicula") + 'Video del módulo</h2>' +
+        reproductor +
+      '</section>' +
+
+      '<section class="ac-bloque">' +
+        '<h2 class="ac-bloque-tit">' + svg("maletin") + 'Material de apoyo</h2>' +
+        pintarRecursos(v.recursos) +
+      '</section>' +
+
+      '<nav class="ac-modulo-nav" aria-label="Navegación entre módulos">' +
+        (anterior
+          ? '<a href="#modulo-' + i + '" data-ir="' + (i - 1) + '">' + svg("atras") +
+              '<span><small>Anterior</small><b>' + esc(anterior.modulo) + '</b></span></a>'
+          : '<span></span>') +
+        (siguiente
+          ? '<a class="siguiente" href="#modulo-' + (i + 2) + '" data-ir="' + (i + 1) + '">' +
+              '<span><small>Siguiente</small><b>' + esc(siguiente.modulo) + '</b></span>' + svg("flecha") + '</a>'
+          : '') +
+      '</nav>';
+
+    conectarRespaldoPortadas(VISTA);
+
+    var play = doc.getElementById("acPlay");
+    if (play) {
+      play.addEventListener("click", function () {
+        precalentarYouTube();
+        reproducir(doc.getElementById("acReproductor"), v);
+        marcarVisto(SALA + ":" + i);
+        actualizarAvance(videos, SALA);
+      });
+    }
+
+    var volver = doc.getElementById("acVolver");
+    if (volver) {
+      /* Siempre cierra el módulo y vuelve al programa. No usamos
+         history.back(): si el boticario saltó entre varios módulos,
+         "atrás" lo devolvería al módulo anterior, no al listado. */
+      volver.addEventListener("click", function () { cerrarModulo(true); });
+    }
+
+    Array.prototype.forEach.call(VISTA.querySelectorAll("[data-ir]"), function (a) {
+      a.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        abrirModulo(parseInt(a.getAttribute("data-ir"), 10), true);
+      });
+    });
+
+    doc.title = v.modulo + " · " + v.titulo + " | Academia Suker";
+  }
+
+  function abrirModulo(i, cambiarUrl) {
+    var videos = (DATOS && DATOS.videos) || [];
+    if (!videos[i]) { return; }
+    if (cambiarUrl) {
+      try { win.history.pushState({ modulo: i }, "", "#modulo-" + (i + 1)); }
+      catch (e) { win.location.hash = "modulo-" + (i + 1); }
+    }
+    doc.body.classList.add("ac-en-modulo");
+    pintarModulo(i);
+    win.scrollTo({ top: 0, behavior: AcademiaSinMovimiento() ? "auto" : "smooth" });
+  }
+
+  function cerrarModulo(cambiarUrl) {
+    if (cambiarUrl) {
+      try { win.history.pushState({}, "", win.location.pathname + win.location.search); }
+      catch (e) { win.location.hash = ""; }
+    }
+    doc.body.classList.remove("ac-en-modulo");
+    if (VISTA) { VISTA.innerHTML = ""; }
+    doc.title = TITULO_SALA;
+  }
+
+  function AcademiaSinMovimiento() {
+    return !!(win.AcademiaSuker && win.AcademiaSuker.sinMovimiento);
+  }
+
+  /* Lee #modulo-N de la URL (1 = primer módulo) */
+  function moduloEnUrl() {
+    var m = /^#modulo-(\d+)$/.exec(win.location.hash || "");
+    if (!m) { return -1; }
+    var i = parseInt(m[1], 10) - 1;
+    return (i >= 0 && DATOS && DATOS.videos && DATOS.videos[i]) ? i : -1;
+  }
+
+  function sincronizarConUrl() {
+    var i = moduloEnUrl();
+    if (i >= 0) { abrirModulo(i, false); }
+    else { cerrarModulo(false); }
+  }
+
+  /* ---------- Cierre de la sala ---------- */
   function pintarCierre(caja, cierre) {
     if (!caja || !cierre) { return; }
 
@@ -251,10 +438,13 @@
   }
 
   /* ---------- Arranque ---------- */
+  var TITULO_SALA = "";
+
   function iniciar() {
-    var sala = doc.documentElement.getAttribute("data-sala");
-    var datos = (win.ACADEMIA_CONTENIDO || {})[sala];
-    if (!datos) { return; }
+    SALA = doc.documentElement.getAttribute("data-sala");
+    DATOS = (win.ACADEMIA_CONTENIDO || {})[SALA];
+    if (!DATOS) { return; }
+    TITULO_SALA = doc.title;
 
     var elCinta   = doc.getElementById("acCinta");
     var elTitulo  = doc.getElementById("acTitulo");
@@ -262,21 +452,21 @@
     var elTarjeta = doc.getElementById("acTarjetas");
     var elVideos  = doc.getElementById("acVideos");
     var elCierre  = doc.getElementById("acCierre");
+    VISTA = doc.getElementById("acModulo");
 
-    if (elCinta)  { elCinta.textContent = datos.cinta; }
-    if (elTitulo) { elTitulo.innerHTML = datos.titulo; }   /* contiene <em> del propio archivo de datos */
-    if (elBajada) { elBajada.innerHTML = datos.bajada; }   /* idem: <strong> redactado por nosotros */
-
-    if (datos.acento === "riesgo") { doc.body.classList.add("ac-riesgo"); }
+    if (elCinta)  { elCinta.textContent = DATOS.cinta; }
+    if (elTitulo) { elTitulo.innerHTML = DATOS.titulo; }   /* el <em> viene del archivo de datos */
+    if (elBajada) { elBajada.innerHTML = DATOS.bajada; }   /* idem con <strong> */
 
     /* Pintamos en el siguiente cuadro para que el navegador
        muestre primero la cabecera y la sala se sienta instantánea. */
     win.requestAnimationFrame(function () {
-      if (elTarjeta) { pintarTarjetas(elTarjeta, datos.tarjetas || []); }
-      if (elVideos)  { pintarVideos(elVideos, datos.videos || [], sala); }
-      if (elCierre)  { pintarCierre(elCierre, datos.cierre); }
+      if (elTarjeta) { pintarTarjetas(elTarjeta, DATOS.tarjetas || []); }
+      if (elVideos)  { pintarModulos(elVideos, DATOS.videos || [], SALA); }
+      if (elCierre)  { pintarCierre(elCierre, DATOS.cierre); }
+      actualizarAvance(DATOS.videos || [], SALA);
 
-      /* Los enlaces recién creados también usan la transición */
+      /* Los enlaces recién creados también usan la animación de paso */
       Array.prototype.forEach.call(doc.querySelectorAll("#acCierre [data-transicion]"), function (a) {
         a.addEventListener("click", function (ev) {
           if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button !== 0) { return; }
@@ -290,7 +480,14 @@
           } else { win.location.href = destino; }
         });
       });
+
+      /* Si alguien llega con un enlace directo a un módulo, se abre solo */
+      sincronizarConUrl();
     });
+
+    /* Botón atrás / adelante del navegador */
+    win.addEventListener("popstate", sincronizarConUrl);
+    win.addEventListener("hashchange", sincronizarConUrl);
   }
 
   if (doc.readyState === "loading") { doc.addEventListener("DOMContentLoaded", iniciar); }
