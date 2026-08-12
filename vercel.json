@@ -53,7 +53,7 @@
       ]
     },
     {
-      "source": "/academiasuker/(.*)",
+      "source": "/academiasuker/:ruta*",
       "headers": [
         {
           "key": "X-Robots-Tag",
@@ -62,7 +62,7 @@
       ]
     },
     {
-      "source": "/tools/(.*)",
+      "source": "/tools/:ruta*",
       "headers": [
         {
           "key": "X-Robots-Tag",
