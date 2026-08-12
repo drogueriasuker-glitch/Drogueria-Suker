@@ -7,6 +7,8 @@ Allow: /
 # Área privada de la Academia Suker y herramientas internas
 Disallow: /academiasuker/
 Disallow: /tools/
+Disallow: /docs/
+Disallow: /*.md$
 
 # Bots de IA / rastreadores que respetan robots (permitidos)
 User-agent: Googlebot

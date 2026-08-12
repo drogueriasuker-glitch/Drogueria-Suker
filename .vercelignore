@@ -1,0 +1,10 @@
+# Archivos que viven en el repositorio pero NO deben publicarse en el sitio.
+# Vercel los excluye del despliegue; siguen versionados en GitHub.
+
+# Documentación interna (guías de la Academia, notas de operación)
+docs/
+*.md
+
+# Configuración local de herramientas
+.claude/
+.vscode/
