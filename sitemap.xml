@@ -16,4 +16,10 @@
       <image:title>Logo de Droguería Suker</image:title>
     </image:image>
   </url>
+  <url>
+    <loc>https://drogueriasuker.com/privacidad.html</loc>
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
 </urlset>
