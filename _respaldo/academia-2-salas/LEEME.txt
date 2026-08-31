@@ -1,0 +1,11 @@
+RESPALDO — Academia Suker con la estructura de 2 salas
+=======================================================
+Guardado el 12 de agosto de 2026, antes de reestructurar
+la Academia en 4 rutas de 3 videos cada una.
+
+Contiene la version anterior: portal con dos puertas
+(Formales / Informales), los 7 recuadros de beneficios y
+costos, y las dos salas con 6 modulos cada una.
+
+Esta carpeta NO se publica en el sitio: esta excluida en
+.vercelignore. Sirve solo para consultar o recuperar algo.

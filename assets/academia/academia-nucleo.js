@@ -307,10 +307,17 @@
   /* ══════════════════════════════════════════════════════════
      4. FORMULARIO DE ACCESO
      ══════════════════════════════════════════════════════════ */
-  var SALAS = { formales: "formales/", informales: "informales/" };
+  /* Rutas a las que se puede volver despues de entrar */
+  var SALAS = {
+    "vender-mejor":    "vender-mejor/",
+    "comprar-y-ganar": "comprar-y-ganar/",
+    "botica-ordenada": "botica-ordenada/",
+    "botica-digital":  "botica-digital/"
+  };
 
   function destinoPedido() {
-    var m = /[?&]ir=([a-z]+)/.exec(win.location.search || "");
+    /* Los slugs llevan guion: vender-mejor, botica-ordenada... */
+    var m = /[?&]ir=([a-z-]+)/.exec(win.location.search || "");
     return (m && SALAS[m[1]]) ? SALAS[m[1]] : null;
   }
 
@@ -331,6 +338,12 @@
   function conectarLogin() {
     var form = doc.getElementById("acFormulario");
     if (!form) { return; }
+
+    /* El logo de la tarjeta solo se descarga si hay que mostrarla */
+    var logo = doc.getElementById("acLoginLogo");
+    if (logo && !sesionActual && logo.getAttribute("data-src")) {
+      logo.src = logo.getAttribute("data-src");
+    }
 
     var elUsuario = doc.getElementById("acUsuario");
     var elClave   = doc.getElementById("acClave");
@@ -468,7 +481,7 @@
      6. PROTECCIÓN DE LAS SALAS
      ══════════════════════════════════════════════════════════ */
   function protegerSala() {
-    var sala = RAIZ.getAttribute("data-sala");
+    var sala = RAIZ.getAttribute("data-ruta");
     if (!sala || sesionActual) { return; }
     /* Sin sesión: al portal, recordando a dónde quería entrar */
     win.location.replace("../?ir=" + encodeURIComponent(sala));
@@ -491,7 +504,7 @@
   if (doc.readyState === "loading") { doc.addEventListener("DOMContentLoaded", iniciar); }
   else { iniciar(); }
 
-  /* API pública (la usa academia-sala.js) */
+  /* API pública (la usan academia-ruta.js y academia-escenas.js) */
   win.AcademiaSuker = {
     sesion: function () { return sesionActual; },
     salir: function () { borrarSesion(); },

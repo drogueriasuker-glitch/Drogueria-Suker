@@ -8,3 +8,6 @@ docs/
 # Configuración local de herramientas
 .claude/
 .vscode/
+
+# Respaldo de versiones anteriores (no se publica)
+_respaldo/
