@@ -167,6 +167,8 @@
 
   /* ── Decisión antes del primer pintado ── */
   RAIZ.classList.add(sesionActual ? "ac-abierto" : "ac-cerrado", "ac-listo");
+  /* Sin sesion no se muestra el velo ni un instante: va directo al login */
+  if (!sesionActual) { RAIZ.classList.add("ac-sin-velo"); }
 
   /* ══════════════════════════════════════════════════════════
      2 bis. EXCEL DE ACCESOS (hoja de cálculo de Google)
@@ -207,49 +209,168 @@
      ══════════════════════════════════════════════════════════ */
   var sinMovimiento = win.matchMedia && win.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  var Cargador = {
-    nodo: null, txt: null, sub: null, pct: null, aro: null, etapas: null,
+  /* Contenido del velo. Va tambien en el HTML de cada pagina para
+     que se vea desde el primer pintado; esto es solo el respaldo. */
+  var PLANTILLA_VELO =
+    '<div class="ac-anillo">' +
+      '<svg viewBox="0 0 116 116" aria-hidden="true">' +
+        '<defs><linearGradient id="acDegradado" x1="0" y1="0" x2="1" y2="1">' +
+          '<stop offset="0%" stop-color="#FFDD73"/><stop offset="100%" stop-color="#C9A020"/>' +
+        '</linearGradient></defs>' +
+        '<circle class="pista"  cx="58" cy="58" r="52"/>' +
+        '<circle class="avance" cx="58" cy="58" r="52"/>' +
+      '</svg>' +
+      '<span class="ac-anillo-pct">0%</span>' +
+    '</div>' +
+    '<div class="ac-cargando-texto"></div>' +
+    '<div class="ac-etapas"></div>' +
+    '<div class="ac-cargando-sub">Academia Suker</div>';
 
+  var Cargador = {
+    nodo: null, txt: null, pct: null, aro: null, etapas: null,
+    desde: 0, terminado: false, tic: null, tope: null, pedidoListo: false,
+
+    /* Adopta el velo que ya viene en el HTML; si no existe, lo crea */
     montar: function () {
+      RAIZ.classList.remove("ac-sin-velo");
       if (this.nodo) { return this.nodo; }
-      var d = doc.createElement("div");
-      d.className = "ac-cargando";
-      d.setAttribute("role", "status");
-      d.setAttribute("aria-live", "polite");
-      d.innerHTML =
-        '<div class="ac-anillo">' +
-          '<svg viewBox="0 0 116 116" aria-hidden="true">' +
-            '<defs><linearGradient id="acDegradado" x1="0" y1="0" x2="1" y2="1">' +
-              '<stop offset="0%" stop-color="#FFDD73"/><stop offset="100%" stop-color="#C9A020"/>' +
-            '</linearGradient></defs>' +
-            '<circle class="pista"  cx="58" cy="58" r="52"/>' +
-            '<circle class="avance" cx="58" cy="58" r="52"/>' +
-          '</svg>' +
-          '<span class="ac-anillo-pct">0%</span>' +
-        '</div>' +
-        '<div class="ac-cargando-texto"></div>' +
-        '<div class="ac-etapas"></div>' +
-        '<div class="ac-cargando-sub">Academia Suker</div>';
-      doc.body.appendChild(d);
+      var d = doc.getElementById("acVelo");
+      if (!d) {
+        if (!doc.body) { return null; }
+        d = doc.createElement("div");
+        d.className = "ac-cargando ac-velo";
+        d.id = "acVelo";
+        d.setAttribute("role", "status");
+        d.setAttribute("aria-live", "polite");
+        d.innerHTML = PLANTILLA_VELO;
+        doc.body.appendChild(d);
+      }
+      /* La red de seguridad del CSS solo hace falta si el JS no corre.
+         Ya corrio: la apagamos para que no oculte el velo a los 8 s. */
+      d.style.animation = "none";
       this.nodo   = d;
       this.txt    = d.querySelector(".ac-cargando-texto");
-      this.sub    = d.querySelector(".ac-cargando-sub");
       this.pct    = d.querySelector(".ac-anillo-pct");
       this.aro    = d.querySelector(".avance");
       this.etapas = d.querySelector(".ac-etapas");
       return d;
     },
 
-    /* pasos: array de textos · alTerminar: callback */
+    pintarEtapas: function (cuantas) {
+      if (!this.etapas) { return; }
+      this.etapas.innerHTML = "";
+      for (var i = 0; i < cuantas; i++) {
+        var e = doc.createElement("i");
+        e.className = "ac-etapa";
+        this.etapas.appendChild(e);
+      }
+    },
+
+    marcarEtapa: function (i) {
+      if (!this.etapas) { return; }
+      var e = this.etapas.children[i];
+      if (e) { e.classList.add("is-hecha"); }
+    },
+
+    fijar: function (porcentaje, texto) {
+      if (this.aro) { this.aro.style.strokeDashoffset = String(326 - (326 * porcentaje) / 100); }
+      if (this.pct) { this.pct.textContent = porcentaje + "%"; }
+      if (texto != null && this.txt && this.txt.textContent !== texto) {
+        var t = this.txt;
+        t.classList.add("is-cambiando");
+        win.setTimeout(function () {
+          t.textContent = texto;
+          t.classList.remove("is-cambiando");
+        }, sinMovimiento ? 0 : 150);
+      }
+    },
+
+    /* ── Arranque de pagina ──
+       El anillo avanza mientras la pagina se prepara y salta al 100 %
+       en cuanto avisa que termino. No inventa espera: si el contenido
+       esta listo en 300 ms, el velo se va en 300 ms. */
+    arranque: function (pasos) {
+      var self = this;
+      if (!this.montar()) { return; }
+      this.nodo.classList.remove("is-cerrado");
+      this.nodo.classList.add("is-visible");
+      this.pintarEtapas(pasos.length);
+      this.desde = Date.now();
+      this.terminado = false;
+      this.fijar(7, pasos[0]);
+
+      var i = 0;
+      this.tic = win.setInterval(function () {
+        if (self.terminado) { return; }
+        if (i < pasos.length - 2) { self.marcarEtapa(i); i++; }
+        /* El avance sigue el tiempo real transcurrido, con techo en 88 %:
+           el ultimo tramo lo completa la pagina cuando esta lista. */
+        var pct = Math.min(88, 7 + Math.round((Date.now() - self.desde) / 17));
+        self.fijar(pct, pasos[i]);
+      }, sinMovimiento ? 160 : 430);
+
+      /* Tope de seguridad: el velo nunca se queda colgado */
+      this.tope = win.setTimeout(function () { self.listo(); }, 6000);
+
+      /* Si la pagina ya habia avisado, cerramos sin esperar nada */
+      if (this.pedidoListo) { this.listo(); }
+    },
+
+    /* La pagina avisa que ya pinto su contenido.
+       Puede llegar antes de que el velo arranque (los scripts con
+       "defer" corren antes de DOMContentLoaded): lo anotamos. */
+    listo: function () {
+      var self = this;
+      if (this.terminado) { return; }
+      if (!this.nodo) { this.pedidoListo = true; return; }
+      this.terminado = true;
+      win.clearInterval(this.tic);
+      win.clearTimeout(this.tope);
+
+      /* Un minimo de medio segundo para que no sea un parpadeo feo */
+      var visto  = Date.now() - (this.desde || Date.now());
+      var faltan = Math.max(0, (sinMovimiento ? 100 : 450) - visto);
+
+      win.setTimeout(function () {
+        self.fijar(100, "Listo");
+        if (self.etapas) {
+          Array.prototype.forEach.call(self.etapas.children, function (e) {
+            e.classList.add("is-hecha");
+          });
+        }
+        win.setTimeout(function () { self.cerrar(); }, sinMovimiento ? 60 : 280);
+      }, faltan);
+    },
+
+    /* ── Salida hacia otra pagina de la Academia ──
+       Tapa la pantalla y navega enseguida. La pagina de destino
+       levanta su propio velo, asi que el paso se ve continuo. */
+    salir: function (destino) {
+      var self = this;
+      if (!this.montar()) { win.location.href = destino; return; }
+      this.terminado = true;
+      win.clearInterval(this.tic);
+      win.clearTimeout(this.tope);
+      this.nodo.classList.remove("is-cerrado");
+      this.nodo.classList.add("is-visible");
+      this.pintarEtapas(3);
+      this.fijar(22, "Abriendo…");
+      win.setTimeout(function () {
+        self.fijar(48, "Abriendo…");
+        self.marcarEtapa(0);
+        win.location.href = destino;
+      }, sinMovimiento ? 40 : 300);
+    },
+
+    /* Secuencia completa (la usa el ingreso con usuario y contrasena) */
     correr: function (pasos, alTerminar) {
       var self = this;
-      this.montar();
-      this.etapas.innerHTML = "";
-      pasos.forEach(function () {
-        var s = doc.createElement("i");
-        s.className = "ac-etapa";
-        self.etapas.appendChild(s);
-      });
+      if (!this.montar()) { if (alTerminar) { alTerminar(); } return; }
+      this.terminado = true;
+      win.clearInterval(this.tic);
+      win.clearTimeout(this.tope);
+      this.pintarEtapas(pasos.length);
+      this.nodo.classList.remove("is-cerrado");
       this.nodo.classList.add("is-visible");
       this.fijar(0, pasos[0] || "");
 
@@ -257,8 +378,7 @@
       var espera = sinMovimiento ? 120 : 380;
 
       function siguiente() {
-        var marcas = self.etapas.children;
-        if (marcas[i]) { marcas[i].classList.add("is-hecha"); }
+        self.marcarEtapa(i);
         i++;
         if (i < pasos.length) {
           self.fijar(Math.round((i / pasos.length) * 100), pasos[i]);
@@ -273,21 +393,10 @@
       win.setTimeout(siguiente, espera);
     },
 
-    fijar: function (porcentaje, texto) {
-      if (this.aro) { this.aro.style.strokeDashoffset = String(326 - (326 * porcentaje) / 100); }
-      if (this.pct) { this.pct.textContent = porcentaje + "%"; }
-      if (texto != null && this.txt && this.txt.textContent !== texto) {
-        var t = this.txt;
-        t.classList.add("is-cambiando");
-        win.setTimeout(function () { t.textContent = texto; t.classList.remove("is-cambiando"); }, sinMovimiento ? 0 : 150);
-      }
-    },
-
     cerrar: function () {
       if (!this.nodo) { return; }
-      var n = this.nodo;
-      n.classList.remove("is-visible");
-      win.setTimeout(function () { n.style.display = ""; }, 320);
+      this.nodo.classList.remove("is-visible");
+      this.nodo.classList.add("is-cerrado");
     }
   };
 
@@ -298,9 +407,11 @@
     "Optimizando el contenido para tu conexión…",
     "Todo listo. Bienvenido."
   ];
-  var PASOS_SALA = [
-    "Preparando tu sala…",
-    "Ordenando los módulos…",
+  var PASOS_PAGINA = [
+    "Verificando tu acceso…",
+    "Preparando tus rutas…",
+    "Ordenando los videos…",
+    "Casi listo…",
     "Listo"
   ];
 
@@ -308,7 +419,7 @@
      4. FORMULARIO DE ACCESO
      ══════════════════════════════════════════════════════════ */
   /* Rutas a las que se puede volver despues de entrar */
-  var SALAS = {
+  var RUTAS = {
     "vender-mejor":    "vender-mejor/",
     "comprar-y-ganar": "comprar-y-ganar/",
     "botica-ordenada": "botica-ordenada/",
@@ -318,7 +429,7 @@
   function destinoPedido() {
     /* Los slugs llevan guion: vender-mejor, botica-ordenada... */
     var m = /[?&]ir=([a-z-]+)/.exec(win.location.search || "");
-    return (m && SALAS[m[1]]) ? SALAS[m[1]] : null;
+    return (m && RUTAS[m[1]]) ? RUTAS[m[1]] : null;
   }
 
   function avisar(caja, tipo, mensaje) {
@@ -472,19 +583,19 @@
         if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button !== 0) { return; }
         ev.preventDefault();
         var destino = a.getAttribute("href");
-        Cargador.correr(PASOS_SALA, function () { win.location.href = destino; });
+        Cargador.salir(destino);
       });
     });
   }
 
   /* ══════════════════════════════════════════════════════════
-     6. PROTECCIÓN DE LAS SALAS
+     6. PROTECCIÓN DE LAS RUTAS
      ══════════════════════════════════════════════════════════ */
   function protegerSala() {
-    var sala = RAIZ.getAttribute("data-ruta");
-    if (!sala || sesionActual) { return; }
+    var ruta = RAIZ.getAttribute("data-ruta");
+    if (!ruta || sesionActual) { return; }
     /* Sin sesión: al portal, recordando a dónde quería entrar */
-    win.location.replace("../?ir=" + encodeURIComponent(sala));
+    win.location.replace("../?ir=" + encodeURIComponent(ruta));
   }
 
   /* ══════════════════════════════════════════════════════════
@@ -493,11 +604,16 @@
   protegerSala();
 
   function iniciar() {
+    /* Con sesion, el velo acompana hasta que la pagina avise que pinto.
+       Sin sesion no hay nada que esperar: se pide la contrasena y ya. */
+    if (sesionActual) { Cargador.arranque(PASOS_PAGINA); }
+    else { Cargador.cerrar(); }
+
     conectarLogin();
     conectarCabecera();
-    /* Aviso discreto cuando el usuario venía de una sala */
+    /* Aviso discreto cuando el usuario venía de una ruta */
     if (!sesionActual && destinoPedido()) {
-      avisar(doc.getElementById("acAviso"), "ok", "Ingresa tus datos y te llevamos directo a la sala que abriste.");
+      avisar(doc.getElementById("acAviso"), "ok", "Ingresa tus datos y te llevamos directo a la ruta que abriste.");
     }
   }
 
@@ -509,6 +625,8 @@
     sesion: function () { return sesionActual; },
     salir: function () { borrarSesion(); },
     cargador: Cargador,
+    listo: function () { Cargador.listo(); },
+    irA: function (destino) { Cargador.salir(destino); },
     sha256: sha256,
     derivar: derivar,
     sinMovimiento: sinMovimiento

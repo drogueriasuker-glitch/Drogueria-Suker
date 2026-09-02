@@ -346,7 +346,10 @@
   function iniciar() {
     var slug = doc.documentElement.getAttribute("data-ruta");
     RUTA = (win.ACADEMIA_POR_SLUG || {})[slug];
-    if (!RUTA) { return; }
+    if (!RUTA) {
+      if (win.AcademiaSuker && win.AcademiaSuker.listo) { win.AcademiaSuker.listo(); }
+      return;
+    }
     TITULO_RUTA = doc.title;
     VISTA = doc.getElementById("acVideoVista");
 
@@ -380,6 +383,8 @@
       pintado = true;
       if (elVideos) { pintarVideos(elVideos, RUTA); }
       sincronizar();
+      /* La ruta ya esta pintada: el velo puede retirarse */
+      if (win.AcademiaSuker && win.AcademiaSuker.listo) { win.AcademiaSuker.listo(); }
     }
     win.requestAnimationFrame(pintarTodo);
     win.setTimeout(pintarTodo, 300);

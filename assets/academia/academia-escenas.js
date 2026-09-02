@@ -87,7 +87,20 @@
     });
   }
 
-  if (doc.readyState === "loading") { doc.addEventListener("DOMContentLoaded", iniciar); }
-  else { iniciar(); }
+  /* Avisa al velo que la portada ya esta lista para verse */
+  function avisarListo() {
+    if (win.AcademiaSuker && win.AcademiaSuker.listo) { win.AcademiaSuker.listo(); }
+  }
+
+  function arrancar() {
+    iniciar();
+    /* Un cuadro despues: el navegador ya pinto las tarjetas */
+    if (win.requestAnimationFrame) { win.requestAnimationFrame(avisarListo); }
+    else { avisarListo(); }
+    win.setTimeout(avisarListo, 400);   /* seguro, por si rAF va frenado */
+  }
+
+  if (doc.readyState === "loading") { doc.addEventListener("DOMContentLoaded", arrancar); }
+  else { arrancar(); }
 
 })(window, document);

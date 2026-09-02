@@ -1443,3 +1443,38 @@ a.ac-recurso:hover { border-color: var(--acento-borde, rgba(255,196,1,.35)); }
 }
 /* Los montantes del estante deben verse: son los que dicen "estante" */
 .esc-poste { fill: var(--acento); opacity: .5; stroke: rgba(1,12,38,.55); stroke-width: 1.3; }
+
+
+/* ============================================================
+   20. VELO DE ENTRADA
+   El velo viene escrito en el HTML y ya es visible en el primer
+   pintado. Aqui solo se define como desaparece y la red de
+   seguridad por si el JavaScript no llegara a ejecutarse.
+   ============================================================ */
+
+/* Sin sesion no hay nada que esperar: el login sale directo */
+html.ac-sin-velo .ac-velo { display: none !important; }
+
+/* Red de seguridad: a los 8 segundos el velo se retira solo,
+   sin depender de JavaScript. Nadie se queda mirando un anillo. */
+.ac-velo { animation: acVeloSeguro 0s linear 8s forwards; }
+@keyframes acVeloSeguro { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+
+.ac-cargando.is-cerrado {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .34s var(--ease-s), visibility 0s linear .34s;
+}
+
+/* El contenido entra con un desvanecido suave al retirarse el velo:
+   se siente continuo en vez de aparecer de golpe. */
+.ac-app { animation: acEntraApp .5s var(--ease-s) both; }
+@keyframes acEntraApp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ac-app { animation: none; }
+}
