@@ -1478,3 +1478,26 @@ html.ac-sin-velo .ac-velo { display: none !important; }
 @media (prefers-reduced-motion: reduce) {
   .ac-app { animation: none; }
 }
+
+
+/* ---------- Anillo mientras se carga la pagina siguiente ----------
+   El navegador congela los temporizadores de la pagina que se va, asi
+   que un porcentaje de JavaScript se quedaria clavado. Esta animacion
+   es de CSS: sigue girando pase lo que pase. */
+.ac-cargando.is-navegando .avance {
+  stroke-dasharray: 82 244;
+  stroke-dashoffset: 0;
+  transition: none;
+  animation: acAroGira 1.05s linear infinite;
+  transform-origin: 50% 50%;
+}
+@keyframes acAroGira {
+  from { transform: rotate(-90deg); }
+  to   { transform: rotate(270deg); }
+}
+.ac-cargando.is-navegando .ac-anillo-pct { opacity: 0; }
+.ac-cargando.is-navegando .ac-etapas { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ac-cargando.is-navegando .avance { animation: none; stroke-dasharray: 244 82; }
+}

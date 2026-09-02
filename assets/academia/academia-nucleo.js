@@ -292,7 +292,7 @@
     arranque: function (pasos) {
       var self = this;
       if (!this.montar()) { return; }
-      this.nodo.classList.remove("is-cerrado");
+      this.nodo.classList.remove("is-cerrado", "is-navegando");
       this.nodo.classList.add("is-visible");
       this.pintarEtapas(pasos.length);
       this.desde = Date.now();
@@ -345,21 +345,48 @@
     /* ── Salida hacia otra pagina de la Academia ──
        Tapa la pantalla y navega enseguida. La pagina de destino
        levanta su propio velo, asi que el paso se ve continuo. */
+    /* ── Salida hacia otra pagina de la Academia ──
+       IMPORTANTE: mientras el navegador carga la pagina siguiente,
+       congela los temporizadores de la que se va. Por eso aqui NO se
+       usa un porcentaje de JavaScript (se quedaria clavado, que era
+       justo el bug del "Abriendo… 48 %"): el anillo gira con una
+       animacion de CSS, que si sigue corriendo. El porcentaje real
+       lo muestra la pagina de destino, donde el JavaScript ya corre. */
     salir: function (destino) {
       var self = this;
       if (!this.montar()) { win.location.href = destino; return; }
-      this.terminado = true;
       win.clearInterval(this.tic);
       win.clearTimeout(this.tope);
+      this.terminado = true;
       this.nodo.classList.remove("is-cerrado");
-      this.nodo.classList.add("is-visible");
-      this.pintarEtapas(3);
-      this.fijar(22, "Abriendo…");
+      this.nodo.classList.add("is-visible", "is-navegando");
+      this.pintarEtapas(0);
+      this.fijar(0, "Abriendo…");
+
+      /* Si la pagina no llega (sin señal, enlace caido) no dejamos al
+         boticario mirando un anillo para siempre. */
+      this.tope = win.setTimeout(function () { self.rendirse(); }, 12000);
+
       win.setTimeout(function () {
-        self.fijar(48, "Abriendo…");
-        self.marcarEtapa(0);
         win.location.href = destino;
-      }, sinMovimiento ? 40 : 300);
+      }, sinMovimiento ? 30 : 240);
+    },
+
+    /* Retira el velo sin animacion: se usa al volver con el boton
+       "atras" del navegador y cuando una navegacion no prospera. */
+    ocultarYa: function () {
+      win.clearInterval(this.tic);
+      win.clearTimeout(this.tope);
+      this.terminado = true;
+      if (this.nodo) {
+        this.nodo.classList.remove("is-visible", "is-navegando");
+        this.nodo.classList.add("is-cerrado");
+      }
+    },
+
+    rendirse: function () {
+      this.fijar(100, "Listo");
+      this.ocultarYa();
     },
 
     /* Secuencia completa (la usa el ingreso con usuario y contrasena) */
@@ -370,7 +397,7 @@
       win.clearInterval(this.tic);
       win.clearTimeout(this.tope);
       this.pintarEtapas(pasos.length);
-      this.nodo.classList.remove("is-cerrado");
+      this.nodo.classList.remove("is-cerrado", "is-navegando");
       this.nodo.classList.add("is-visible");
       this.fijar(0, pasos[0] || "");
 
@@ -602,6 +629,20 @@
      7. ARRANQUE
      ══════════════════════════════════════════════════════════ */
   protegerSala();
+
+  /* ══════════════════════════════════════════════════════════
+     VOLVER CON EL BOTON "ATRAS" DEL NAVEGADOR
+     Al retroceder, el navegador puede restaurar la pagina tal cual
+     quedo (bfcache), con el velo de salida todavia encima y el
+     anillo clavado donde se quedo. Hay que retirarlo a mano: esta
+     era la causa de que apareciera "Abriendo… 48 %" sin avanzar.
+     ══════════════════════════════════════════════════════════ */
+  win.addEventListener("pageshow", function (ev) {
+    if (ev.persisted) { Cargador.ocultarYa(); }
+  });
+
+  /* Misma idea para el historial dentro de la propia pagina */
+  win.addEventListener("popstate", function () { Cargador.ocultarYa(); });
 
   function iniciar() {
     /* Con sesion, el velo acompana hasta que la pagina avise que pinto.
