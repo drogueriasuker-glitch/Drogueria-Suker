@@ -40,6 +40,11 @@
      Ojo con la ruta: se escribe desde la página de la ruta, por eso
      empieza con ../../
 
+     Campos opcionales de cada recurso:
+       miniatura →  imagen de la primera página (yo la genero)
+       peso      →  se muestra en la tarjeta, para que quien paga
+                    sus megas decida antes de tocar
+
      Tipos: pdf · drive · hoja · doc · imagen · enlace · video · wa
      Sin url aparece en gris como "Pronto" y no rompe nada.
 
@@ -61,14 +66,30 @@ window.ACADEMIA_RUTAS = [
     escena: "mostrador",
     videos: [
       {
-        titulo: "Autocuidado que sí puedes recomendar",
+        /* El título sale del propio material: la tarjeta de mostrador
+           dice «Ruta 1 · Vender mejor — Video 1». */
+        titulo: "El cliente al que no le debes vender nada",
         duracion: "7 min",
         id: "",
         estado: "proximamente",
-        descripcion: "Qué productos de autocuidado puedes recomendar con tranquilidad desde el mostrador, y dónde está el límite.",
+        descripcion: "Cuándo lo correcto es no vender y derivar al médico. Aprendes a reconocer el patrón: si lo que te cuentan es más grande que lo que un producto de mostrador puede resolver, deriva.",
         recursos: [
-          { tipo: "pdf",   titulo: "Resumen del módulo",  detalle: "PDF · 1 página", url: "" },
-          { tipo: "drive", titulo: "Carpeta del módulo",  detalle: "Google Drive",   url: "" }
+          {
+            tipo: "pdf",
+            titulo: "Si dudas, deriva",
+            detalle: "PDF · 1 página · para pegar junto a tu caja",
+            url: "../../assets/academia/modulos-principales/1-vender-mejor/video-1/tarjeta-mostrador-si-dudas-deriva.pdf",
+            miniatura: "../../assets/academia/modulos-principales/1-vender-mejor/video-1/tarjeta-mostrador-si-dudas-deriva.webp",
+            peso: "36 KB"
+          },
+          {
+            tipo: "pdf",
+            titulo: "Tarjetas para entregar al paciente",
+            detalle: "PDF · 1 página · para recortar",
+            url: "../../assets/academia/modulos-principales/1-vender-mejor/video-1/tarjetas-para-el-paciente.pdf",
+            miniatura: "../../assets/academia/modulos-principales/1-vender-mejor/video-1/tarjetas-para-el-paciente.webp",
+            peso: "25 KB"
+          }
         ]
       },
       {

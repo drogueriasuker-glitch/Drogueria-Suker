@@ -8,6 +8,7 @@ Allow: /
 Disallow: /academiasuker/
 Disallow: /tools/
 Disallow: /docs/
+Disallow: /assets/academia/modulos-principales/
 Disallow: /*.md$
 
 # Bots de IA / rastreadores que respetan robots (permitidos)

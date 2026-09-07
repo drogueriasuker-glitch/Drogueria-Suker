@@ -69,6 +69,15 @@
           "value": "noindex, nofollow"
         }
       ]
+    },
+    {
+      "source": "/assets/academia/modulos-principales/:ruta*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
     }
   ]
 }

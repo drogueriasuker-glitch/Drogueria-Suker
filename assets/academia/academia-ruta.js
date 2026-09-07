@@ -35,7 +35,9 @@
     doc:      '<path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7l-5-5z"/><path d="M14 2v5h5"/><path d="M8.5 12.5h7M8.5 16h5"/>',
     imagen:   '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.8"/><path d="m4 17 4.5-4.5 3.5 3.5 3-3L20 17"/>',
     enlace:   '<path d="M10 13a4 4 0 0 0 5.7.3l3-3a4 4 0 1 0-5.7-5.7L11.5 6"/><path d="M14 11a4 4 0 0 0-5.7-.3l-3 3a4 4 0 1 0 5.7 5.7l1.4-1.4"/>',
-    wa:       '<path d="M3 21l1.7-5A8.4 8.4 0 1 1 8 19.4L3 21z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5"/>'
+    wa:       '<path d="M3 21l1.7-5A8.4 8.4 0 1 1 8 19.4L3 21z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5"/>',
+    ojo:      '<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+    descarga: '<path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/>'
   };
   var NOMBRE_TIPO = {
     pdf: "PDF", drive: "Google Drive", hoja: "Hoja de cálculo", doc: "Documento",
@@ -200,14 +202,40 @@
     }
     return '<div class="ac-recursos">' + recursos.map(function (r) {
       var etiqueta = r.detalle || NOMBRE_TIPO[r.tipo] || "Material";
-      var icono = '<span class="ac-recurso-icono">' + svg(iconoTipo(r.tipo)) + '</span>';
-      var txt = '<span class="ac-recurso-txt"><b>' + esc(r.titulo) + '</b><span>' + esc(etiqueta) + '</span></span>';
+      if (r.peso) { etiqueta += " · " + r.peso; }
+
+      /* Sin archivo todavia: se ve deliberado, no roto */
       if (!r.url) {
-        return '<div class="ac-recurso is-pendiente">' + icono + txt +
-               '<span class="ac-recurso-sello">Pronto</span></div>';
+        return '<div class="ac-recurso is-pendiente">' +
+                 '<span class="ac-recurso-icono">' + svg(iconoTipo(r.tipo)) + '</span>' +
+                 '<span class="ac-recurso-txt"><b>' + esc(r.titulo) + '</b>' +
+                 '<span>' + esc(etiqueta) + '</span></span>' +
+                 '<span class="ac-recurso-sello">Pronto</span>' +
+               '</div>';
       }
-      return '<a class="ac-recurso" href="' + esc(r.url) + '" target="_blank" rel="noopener">' +
-             icono + txt + '<span class="ac-recurso-flecha">' + svg("flecha") + '</span></a>';
+
+      /* Con miniatura de la primera pagina: se ve lo que uno se lleva
+         antes de gastar datos en abrirlo. */
+      var vista = r.miniatura
+        ? '<img class="ac-recurso-vista" src="' + esc(r.miniatura) + '" alt="Primera página de ' +
+          esc(r.titulo) + '" width="320" height="453" loading="lazy" decoding="async">'
+        : '<span class="ac-recurso-icono">' + svg(iconoTipo(r.tipo)) + '</span>';
+
+      /* Dos acciones separadas: "Ver" lo abre en el visor del celular,
+         "Descargar" lo guarda para consultarlo despues sin datos. */
+      return '<div class="ac-recurso ac-recurso--archivo">' +
+               vista +
+               '<div class="ac-recurso-txt">' +
+                 '<b>' + esc(r.titulo) + '</b>' +
+                 '<span>' + esc(etiqueta) + '</span>' +
+                 '<div class="ac-recurso-acciones">' +
+                   '<a class="ac-recurso-btn ac-recurso-btn--ver" href="' + esc(r.url) + '" ' +
+                      'target="_blank" rel="noopener">' + svg("ojo") + 'Ver</a>' +
+                   '<a class="ac-recurso-btn" href="' + esc(r.url) + '" download>' +
+                      svg("descarga") + 'Descargar</a>' +
+                 '</div>' +
+               '</div>' +
+             '</div>';
     }).join("") + '</div>';
   }
 

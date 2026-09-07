@@ -1501,3 +1501,111 @@ html.ac-sin-velo .ac-velo { display: none !important; }
 @media (prefers-reduced-motion: reduce) {
   .ac-cargando.is-navegando .avance { animation: none; stroke-dasharray: 244 82; }
 }
+
+
+/* ============================================================
+   21. MATERIAL DE APOYO CON VISTA PREVIA
+   La miniatura de la primera pagina deja ver que te llevas antes
+   de gastar datos en abrir el archivo. Dos acciones claras:
+   "Ver" lo abre en el visor del celular, "Descargar" lo guarda
+   para consultarlo despues sin conexion.
+
+   No incrustamos el PDF en la pagina a proposito: la politica de
+   seguridad del sitio no lo permite (object-src 'none') y un visor
+   de PDF dentro de la pagina va pesado en un Android de gama media.
+   ============================================================ */
+
+.ac-recurso--archivo {
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+}
+
+.ac-recurso-vista {
+  width: 84px;
+  height: auto;
+  flex-shrink: 0;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(1,10,32,.4);
+  transition: transform var(--t-base), border-color var(--t-base);
+}
+.ac-recurso--archivo:hover .ac-recurso-vista {
+  transform: translateY(-2px);
+  border-color: var(--acento-borde, rgba(255,196,1,.45));
+}
+
+.ac-recurso--archivo .ac-recurso-txt { display: flex; flex-direction: column; }
+.ac-recurso--archivo .ac-recurso-txt b { font-size: 1rem; margin-bottom: .18rem; }
+.ac-recurso--archivo .ac-recurso-txt > span { font-size: .82rem; }
+
+.ac-recurso-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .85rem;
+}
+.ac-recurso-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .48rem .9rem;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.06);
+  font-size: .85rem;
+  font-weight: 650;
+  color: var(--mist);
+  white-space: nowrap;
+  transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+}
+.ac-recurso-btn svg { width: 15px; height: 15px; }
+.ac-recurso-btn:hover {
+  background: rgba(255,255,255,.11);
+  color: var(--white);
+  border-color: var(--acento-borde, rgba(255,196,1,.45));
+  transform: translateY(-1px);
+}
+.ac-recurso-btn--ver {
+  background: var(--acento-suave, rgba(255,196,1,.14));
+  border-color: var(--acento-borde, rgba(255,196,1,.45));
+  color: var(--acento, var(--gold));
+}
+.ac-recurso-btn--ver:hover { background: var(--acento, var(--gold)); color: var(--navy-deep); }
+
+/* En el celular la miniatura se achica para dejar sitio al texto */
+@media (max-width: 560px) {
+  .ac-recurso--archivo { gap: .85rem; padding: .9rem; }
+  .ac-recurso-vista { width: 66px; }
+  .ac-recurso-acciones { gap: .4rem; }
+  .ac-recurso-btn { padding: .44rem .75rem; font-size: .8rem; }
+}
+
+
+/* ============================================================
+   22. CHIPS de la cabecera del video  (7 min · Disponible · 2 materiales)
+   Estos estilos vivian en la seccion de "las dos puertas" y se
+   perdieron al reestructurar la Academia en 4 rutas: los iconos
+   se veian gigantes y el texto caia debajo.
+   ============================================================ */
+.ac-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .32rem .75rem;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: rgba(0,0,0,.2);
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--mist);
+  white-space: nowrap;
+  line-height: 1.5;
+}
+.ac-chip svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  opacity: .85;
+}
