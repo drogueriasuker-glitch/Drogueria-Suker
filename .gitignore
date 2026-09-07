@@ -12,3 +12,16 @@ Desktop.ini
 *.tmp
 *~
 *.log
+
+# Material de la Academia: los videos van a YouTube, nunca al repositorio.
+# Un modulo de 15 minutos pesa cientos de megas; metido aqui reventaria
+# el repositorio y haria lentisima cada publicacion del sitio.
+# (El video del hero, assets/video/suker.mp4, si esta versionado.)
+assets/academia/modulos-principales/**/*.mp4
+assets/academia/modulos-principales/**/*.mov
+assets/academia/modulos-principales/**/*.webm
+assets/academia/modulos-principales/**/*.mkv
+assets/academia/modulos-principales/**/*.avi
+assets/academia/modulos-principales/**/*.m4v
+assets/academia/modulos-principales/**/*.prproj
+assets/academia/modulos-principales/**/*.veg

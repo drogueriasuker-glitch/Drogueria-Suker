@@ -1,0 +1,22 @@
+Módulo 3 · Mi botica ordenada
+=============================
+
+VIDEO 1 · El semáforo de tus vencimientos
+Duración prevista: 8 min
+
+Aquí va TODO el material de apoyo de este video:
+PDF, imágenes, plantillas, enlaces impresos, lo que necesites.
+
+CÓMO NOMBRAR LOS ARCHIVOS
+  Minúsculas, sin tildes ni espacios, con guiones.
+  Ejemplos:  guia-el.pdf   ·   resumen-una-pagina.pdf
+
+EL VIDEO NO VA AQUÍ
+  Sube el video a YouTube en modo "Oculto / No listado" y pásame
+  el ID. Los archivos de video están bloqueados en .gitignore
+  a propósito: pesan cientos de megas y no deben entrar al sitio.
+
+CUANDO PEGUES ALGO, AVÍSAME
+  Falta registrarlo en assets/academia/academia-datos.js para que
+  salga en la tarjeta. Yo lo registro, le hago la miniatura de la
+  primera página y lo subo a producción.

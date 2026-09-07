@@ -14,10 +14,31 @@
      3. Pon el id y cambia estado a "disponible".
      4. Ajusta "duracion" a la real que muestra YouTube.
 
+   ▸ DÓNDE VIVEN LOS ARCHIVOS
+     Todo el material está en carpetas, una por video:
+
+       assets/academia/modulos-principales/
+           1-vender-mejor/     video-1/  video-2/  video-3/
+           2-comprar-y-ganar/  video-1/  video-2/  video-3/
+           3-botica-ordenada/  video-1/  video-2/  video-3/
+           4-botica-digital/   video-1/  video-2/  video-3/
+
+     Pega el PDF en la carpeta del video que le toca y luego
+     regístralo aquí abajo. Pegar el archivo NO basta: si no está
+     en esta lista, no aparece en la tarjeta.
+
    ▸ PARA COLGAR MATERIAL DE APOYO
      Dentro de "recursos" agrega los que quieras:
 
-     { tipo: "pdf", titulo: "Resumen del módulo", detalle: "PDF · 1 página", url: "https://…" }
+     {
+       tipo: "pdf",
+       titulo: "Guía de autocuidado",
+       detalle: "PDF · 3 páginas · 480 KB",
+       url: "../../assets/academia/modulos-principales/1-vender-mejor/video-1/guia-autocuidado.pdf"
+     }
+
+     Ojo con la ruta: se escribe desde la página de la ruta, por eso
+     empieza con ../../
 
      Tipos: pdf · drive · hoja · doc · imagen · enlace · video · wa
      Sin url aparece en gris como "Pronto" y no rompe nada.

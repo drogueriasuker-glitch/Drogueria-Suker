@@ -11,3 +11,6 @@ docs/
 
 # Respaldo de versiones anteriores (no se publica)
 _respaldo/
+
+# Notas internas dentro de las carpetas de material
+LEEME.txt

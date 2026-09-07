@@ -1,0 +1,48 @@
+MÓDULOS PRINCIPALES — Academia Suker
+=====================================
+
+Aquí vive TODO el material de los 4 módulos de la Academia.
+Cada carpeta de aquí corresponde a una página del sitio:
+
+  1-vender-mejor      →  drogueriasuker.com/academiasuker/vender-mejor
+  2-comprar-y-ganar   →  drogueriasuker.com/academiasuker/comprar-y-ganar
+  3-botica-ordenada   →  drogueriasuker.com/academiasuker/botica-ordenada
+  4-botica-digital    →  drogueriasuker.com/academiasuker/botica-digital
+
+Dentro de cada módulo hay tres carpetas, una por video:
+
+  video-1/   video-2/   video-3/
+
+En la carpeta de cada video pones su material de apoyo: PDF,
+imágenes, plantillas, lo que haga falta. Cada carpeta tiene su
+propio LEEME.txt con el nombre del video que le toca.
+
+────────────────────────────────────────────────────────────
+DOS REGLAS QUE IMPORTAN
+────────────────────────────────────────────────────────────
+
+1. EL VIDEO NO VA AQUÍ.
+   Los videos se suben a YouTube en modo "Oculto / No listado" y
+   aquí solo se registra su ID. Un video de 15 minutos pesa cientos
+   de megas: metido en esta carpeta reventaría el repositorio y
+   haría lentísima cada publicación del sitio. Por eso los archivos
+   de video están bloqueados en .gitignore.
+
+2. PEGAR EL ARCHIVO NO BASTA.
+   Para que un material aparezca en la web hay que registrarlo
+   además en  assets/academia/academia-datos.js.
+   Pega el archivo, avísame, y yo lo registro, le genero la
+   miniatura y lo publico.
+
+────────────────────────────────────────────────────────────
+CÓMO NOMBRAR LOS ARCHIVOS
+────────────────────────────────────────────────────────────
+
+Minúsculas, sin tildes ni espacios, con guiones:
+
+  guia-autocuidado.pdf
+  resumen-una-pagina.pdf
+  plantilla-control.pdf
+
+Nada de "Guía de Autocuidado (final) v2.pdf": los espacios y las
+tildes se rompen en las direcciones web.
