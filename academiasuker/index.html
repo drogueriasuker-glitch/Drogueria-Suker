@@ -16,18 +16,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/academia/academia.css?v=20260815a">
+  <link rel="stylesheet" href="../assets/academia/academia.css?v=20260818a">
 
   <!-- Las rutas se precargan desde academia-escenas.js, y solo
        si el boticario no tiene activado el ahorro de datos. -->
 
   <!-- Sin "defer": deciden antes del primer pintado si se muestra
        la Academia o el formulario, para que nada parpadee. -->
-  <script src="../assets/academia/academia-config.js?v=20260815a"></script>
-  <script src="../assets/academia/academia-usuarios.js?v=20260815a"></script>
-  <script src="../assets/academia/academia-nucleo.js?v=20260815a"></script>
+  <script src="../assets/academia/academia-config.js?v=20260818a"></script>
+  <script src="../assets/academia/academia-usuarios.js?v=20260818a"></script>
+  <script src="../assets/academia/academia-nucleo.js?v=20260818a"></script>
   <!-- Solo inclina la escena y la pausa fuera de pantalla -->
-  <script src="../assets/academia/academia-escenas.js?v=20260815a" defer></script>
+  <script src="../assets/academia/academia-escenas.js?v=20260818a" defer></script>
 </head>
 <body>
 
@@ -64,11 +64,10 @@
 <!-- ══════════════════ PORTADA: ACCESO ══════════════════ -->
 <div class="ac-portada" id="acPortada">
   <section class="ac-login" aria-labelledby="acLoginTitulo">
-    <!-- El navegador descarga este logo solo si hay que pedir la
-         contraseña: academia-nucleo.js le pone el src. Quien ya
-         inició sesión no gasta datos en una tarjeta que no verá. -->
-    <img class="ac-login-logo" id="acLoginLogo" data-src="../assets/img/logo-172.png"
-         alt="Logo de Droguería Suker" width="86" height="86" decoding="async">
+    <span class="ac-login-sello">
+      <img class="ac-login-logo" id="acLoginLogo" src="../assets/img/logo-172.webp"
+           alt="Logo de Droguería Suker" width="86" height="86" decoding="async">
+    </span>
 
     <h1 id="acLoginTitulo">Academia <em>Suker</em></h1>
     <p class="ac-login-lead">
@@ -136,7 +135,7 @@
   <header class="ac-top">
     <div class="contenedor">
       <a class="ac-marca" href="./" aria-label="Inicio de la Academia Suker">
-        <img src="../assets/img/logo-96.png" alt="" width="40" height="40">
+        <img src="../assets/img/logo-96.webp" alt="" width="40" height="40">
         <span class="ac-marca-txt">
           <b>Academia Suker</b>
           <span>Formación para boticarios</span>

@@ -477,12 +477,6 @@
     var form = doc.getElementById("acFormulario");
     if (!form) { return; }
 
-    /* El logo de la tarjeta solo se descarga si hay que mostrarla */
-    var logo = doc.getElementById("acLoginLogo");
-    if (logo && !sesionActual && logo.getAttribute("data-src")) {
-      logo.src = logo.getAttribute("data-src");
-    }
-
     var elUsuario = doc.getElementById("acUsuario");
     var elClave   = doc.getElementById("acClave");
     var elRecord  = doc.getElementById("acRecordar");

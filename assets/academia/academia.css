@@ -1609,3 +1609,244 @@ html.ac-sin-velo .ac-velo { display: none !important; }
   flex-shrink: 0;
   opacity: .85;
 }
+
+
+/* ============================================================
+   23. ACCESO EN CELULAR Y TABLET
+   Correcciones de comportamiento y un poco mas de color, sin
+   agregar ni una peticion de red: todo es CSS.
+   ============================================================ */
+
+/* ---------- 23.1 La pantalla ya no se descuadra ---------- */
+
+/* En el celular, 100vh cuenta tambien lo que tapa la barra del
+   navegador: la pagina queda mas alta que la pantalla y se mueve
+   sola al aparecer y desaparecer esa barra. dvh mide lo que de
+   verdad se ve. Se dejan los tres valores en escalera para los
+   navegadores que no conozcan los nuevos. */
+body { min-height: 100vh; min-height: 100svh; min-height: 100dvh; }
+
+.ac-portada {
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  /* Con grid, la columna crecia hasta el ancho del texto mas largo
+     y la tarjeta se salia 43 px en pantallas de 320 px. Con flex,
+     el ancho lo manda el contenedor. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding:
+    calc(1.75rem + env(safe-area-inset-top)) calc(1.1rem + env(safe-area-inset-right))
+    calc(2.25rem + env(safe-area-inset-bottom)) calc(1.1rem + env(safe-area-inset-left));
+}
+/* Si la tarjeta es mas alta que la pantalla, "safe" evita que se
+   corte por arriba y quede fuera del alcance del dedo. */
+@supports (align-items: safe center) {
+  .ac-portada { align-items: safe center; }
+}
+.ac-login { min-width: 0; }
+
+/* La barra superior y el pie respetan la muesca y la barra de
+   gestos del iPhone. */
+.ac-top .contenedor {
+  padding-left: calc(clamp(1.1rem, 4vw, 2rem) + env(safe-area-inset-left));
+  padding-right: calc(clamp(1.1rem, 4vw, 2rem) + env(safe-area-inset-right));
+}
+.ac-pie { padding-bottom: calc(1.9rem + env(safe-area-inset-bottom)); }
+
+/* ---------- 23.2 Se acabo el zoom al tocar un campo ---------- */
+
+/* Safari en iPhone hace zoom a la pagina cuando tocas un campo con
+   letra menor a 16 px. Era el salto que se veia al escribir. */
+.ac-campo input,
+.ac-campo-caja input { font-size: 16px; }
+
+/* Objetivos de toque de 44 px: lo minimo para acertar con el dedo */
+.ac-ojo { width: 46px; height: 46px; margin-right: .2rem; flex-shrink: 0; }
+.ac-ojo svg { width: 19px; height: 19px; }
+.ac-recordar { min-height: 44px; align-items: center; padding-block: .3rem; }
+.ac-check { width: 22px; height: 22px; }
+.ac-check svg { width: 13px; height: 13px; }
+.ac-btn-oro { min-height: 52px; }
+.ac-salir { width: 38px; height: 38px; }
+
+/* El teclado del celular no debe tapar el campo que se escribe */
+.ac-campo input { scroll-margin-block: 6rem; }
+
+/* ---------- 23.3 Mas color, sin pesar mas ---------- */
+
+/* Antes el fondo del acceso era navy plano. Ahora respira: un halo
+   dorado arriba y uno azul frio abajo, los dos de la propia paleta.
+   Son degradados, no imagenes: cuestan cero bytes de red. */
+.ac-portada {
+  position: relative;
+  isolation: isolate;
+}
+.ac-portada::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(760px 420px at 50% -6%,  rgba(255,196,1,.17), transparent 64%),
+    radial-gradient(620px 460px at 12% 104%, rgba(45,69,128,.55), transparent 66%),
+    radial-gradient(560px 380px at 92% 86%,  rgba(255,196,1,.07), transparent 68%);
+  animation: acRespira 14s var(--ease-s) infinite alternate;
+}
+@keyframes acRespira {
+  from { opacity: .85; transform: scale(1); }
+  to   { opacity: 1;   transform: scale(1.045); }
+}
+
+/* La tarjeta recoge la luz por el borde superior, como un canto
+   metalico. Es lo que la separa del fondo sin subir el contraste. */
+.ac-login {
+  position: relative;
+  background:
+    linear-gradient(158deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.028) 46%, rgba(255,196,1,.045) 100%);
+  box-shadow:
+    0 34px 90px rgba(0,0,0,.5),
+    0 0 0 1px rgba(255,255,255,.045),
+    inset 0 1px 0 rgba(255,255,255,.16);
+}
+.ac-login::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 12%; right: 12%;
+  height: 1px;
+  border-radius: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,196,1,.75), transparent);
+}
+
+/* ---------- 23.4 El sello: la firma de esta pantalla ----------
+   Un arco dorado recorre el logo una vez, como un sello que
+   autoriza, y deja un aro fino permanente. Habla el mismo idioma
+   que el anillo de carga, asi que se lee como sistema y no como
+   adorno; y dice justo lo que hace la pantalla: dar acceso. */
+.ac-login-sello {
+  position: relative;
+  display: block;
+  width: 86px;
+  height: 86px;
+  margin: 0 auto 1.15rem;
+}
+.ac-login-sello .ac-login-logo { margin: 0; }
+
+/* El aro que queda */
+.ac-login-sello::before {
+  content: '';
+  position: absolute;
+  inset: -9px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,196,1,.34);
+  animation: acSelloFijo .55s var(--ease-s) 1.05s both;
+}
+/* El arco que recorre una sola vez */
+.ac-login-sello::after {
+  content: '';
+  position: absolute;
+  inset: -9px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--gold);
+  border-right-color: rgba(255,196,1,.45);
+  animation: acSelloGira 1.15s var(--ease) .18s 1 both;
+}
+@keyframes acSelloGira {
+  from { transform: rotate(-130deg); opacity: 0; }
+  22%  { opacity: 1; }
+  to   { transform: rotate(295deg); opacity: 0; }
+}
+@keyframes acSelloFijo {
+  from { opacity: 0; transform: scale(.92); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- 23.5 Entrada escalonada ----------
+   Las piezas aparecen en el orden en que se leen. Un solo momento
+   orquestado en vez de efectos sueltos por toda la pantalla. */
+.ac-login-sello,
+.ac-login h1,
+.ac-login-lead,
+.ac-campo,
+.ac-recordar,
+.ac-btn-oro,
+.ac-login-pie {
+  animation: acSube .5s var(--ease) both;
+}
+.ac-login-sello  { animation-delay: .04s; }
+.ac-login h1     { animation-delay: .12s; }
+.ac-login-lead   { animation-delay: .18s; }
+.ac-campo:nth-of-type(1) { animation-delay: .24s; }
+.ac-campo:nth-of-type(2) { animation-delay: .30s; }
+.ac-recordar     { animation-delay: .36s; }
+.ac-btn-oro      { animation-delay: .42s; }
+.ac-login-pie    { animation-delay: .50s; }
+@keyframes acSube {
+  from { opacity: 0; transform: translateY(9px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- 23.6 Detalles al usar ---------- */
+
+/* Al escribir, el icono del campo se enciende en dorado */
+.ac-campo-caja > svg { transition: color var(--t-base); }
+.ac-campo-caja:focus-within > svg { color: var(--gold); }
+.ac-campo-caja:focus-within {
+  border-color: rgba(255,196,1,.65);
+  box-shadow: 0 0 0 4px rgba(255,196,1,.14);
+}
+
+/* Un destello recorre el boton, el mismo del boton de la portada */
+.ac-btn-oro { position: relative; overflow: hidden; isolation: isolate; }
+.ac-btn-oro::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; left: -55%;
+  width: 42%;
+  z-index: -1;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.6), transparent);
+  transform: skewX(-18deg);
+  animation: acDestello 5.5s var(--ease-s) 1.4s infinite;
+}
+@keyframes acDestello {
+  0%, 66%   { left: -55%; }
+  88%, 100% { left: 125%; }
+}
+
+/* El enlace de WhatsApp del pie se distingue al tocarlo */
+.ac-login-pie a { transition: color var(--t-fast); }
+.ac-login-pie a:active { color: var(--gold-light); }
+
+/* ---------- 23.7 Pantallas cortas y tablet ---------- */
+
+/* En celulares bajitos la tarjeta se aprieta para caber entera */
+@media (max-height: 720px) {
+  .ac-login { padding: 1.5rem 1.4rem 1.6rem; }
+  .ac-login-sello { width: 66px; height: 66px; margin-bottom: .85rem; }
+  .ac-login-sello .ac-login-logo { width: 66px; height: 66px; }
+  .ac-login h1 { font-size: 1.5rem; }
+  .ac-login-lead { font-size: .88rem; margin-bottom: 1.25rem; }
+  .ac-campo { margin-bottom: .75rem; }
+  .ac-login-pie { margin-top: 1.1rem; padding-top: .95rem; font-size: .78rem; }
+}
+
+/* En tablet la tarjeta puede respirar un poco mas */
+@media (min-width: 700px) and (min-height: 800px) {
+  .ac-login { max-width: 486px; padding: 2.7rem 2.6rem 2.4rem; }
+  .ac-login-sello { width: 96px; height: 96px; }
+  .ac-login-sello .ac-login-logo { width: 96px; height: 96px; }
+}
+
+/* ---------- 23.8 Movimiento reducido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .ac-portada::before,
+  .ac-login-sello::before,
+  .ac-login-sello::after,
+  .ac-btn-oro::after { animation: none; }
+  .ac-login-sello::after { opacity: 0; }
+  .ac-login-sello::before { opacity: 1; transform: none; }
+  .ac-login-sello, .ac-login h1, .ac-login-lead,
+  .ac-campo, .ac-recordar, .ac-btn-oro, .ac-login-pie { animation: none; }
+}
